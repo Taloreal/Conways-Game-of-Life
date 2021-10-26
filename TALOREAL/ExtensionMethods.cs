@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Utilities {
+namespace TALOREAL {
     
     public static class ExtensionMethods {
 
@@ -49,6 +49,16 @@ namespace Utilities {
                 objs.Add(arr[pos]);
             }
             return objs.ToArray();
+        }
+
+        public static bool TryParseBool(string str, out bool result) {
+            result = false;
+            if (string.IsNullOrEmpty(str)) { return false; }
+            if (str[0] == '0' || str.ToLower().StartsWith("false")) { return true; }
+            if (str[0] == '1' || str.ToLower().StartsWith("true")) { 
+                result = true; return true; 
+            }
+            return false;
         }
     }
 }

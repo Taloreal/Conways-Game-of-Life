@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Utilities {
+namespace TALOREAL {
 
     /// <summary>
     /// Represents a change from oldval to newval in the database.
@@ -42,6 +42,8 @@ namespace Utilities {
         private static Dictionary<Type, Parser> Converter = new Dictionary<Type, Parser>() {
             { typeof(string),   (string s, out bool p) =>
                 { p = true; return s; } },
+            { typeof(bool),     (string s, out bool p) =>
+                { p = ExtensionMethods.TryParseBool(s, out bool val); return val; } },
             { typeof(byte),     (string s, out bool p) =>
                 { p = byte.TryParse(s, out byte val); return val; } },
             { typeof(short),    (string s, out bool p) =>

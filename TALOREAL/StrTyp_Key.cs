@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Utilities {
+namespace TALOREAL {
 
     [Serializable] public class StrTyp_Key {
 
