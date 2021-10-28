@@ -14,7 +14,6 @@ namespace GameOfLife {
 
         public int NewWidth { get; private set; }
         public int NewHeight { get; private set; }
-        public bool Canceled { get; private set; }
 
         public frmGetNewSize() {
             InitializeComponent();
@@ -27,14 +26,14 @@ namespace GameOfLife {
                 MessageBox.Show("Must enter positive integers!");
                 return;
             }
+            this.DialogResult = DialogResult.OK;
             NewWidth = width;
             NewHeight = height;
-            Canceled = false;
             this.Close();
         }
 
         private void cancelBtn_Click(object sender, EventArgs e) {
-            Canceled = true;
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
     }

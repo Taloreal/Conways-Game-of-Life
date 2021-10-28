@@ -42,7 +42,7 @@ namespace GameOfLife {
         KnownColor ActiveColor {
             get {
                 if (!Settings.GetValue("activeClr", out int val)) {
-                    val = 95; // KnownColor.LightGray;
+                    val = 78; // KnownColor.Gray;
                 }
                 return (KnownColor)val;
             }
@@ -351,11 +351,8 @@ namespace GameOfLife {
         /// Reset the universe and stop the timer.
         /// </summary>
         private void newToolStripButton_Click(object sender, EventArgs e) {
-            timer.Enabled = false;
-            startStopToolStripButton.Image = global::GameOfLife.Properties.Resources.Start;
             universe = new bool[universe.GetLength(0), universe.GetLength(1)];
-            graphicsPanel1.Invalidate();
-            UpdateAliveStatus();
+            PauseSim();
         }
 
         /// <summary>
@@ -410,14 +407,22 @@ namespace GameOfLife {
             Toroidal = false;
             GridColor = KnownColor.Black;
             InactiveColor = KnownColor.White;
-            ActiveColor = KnownColor.LightGray;
+            ActiveColor = KnownColor.Gray;
             ForceRedraw(null, null);
+        }
+
+        private void PauseSim() {
+            timer.Enabled = false;
+            startStopToolStripButton.Image = global::GameOfLife.Properties.Resources.Start;
+            graphicsPanel1.Invalidate();
+            UpdateAliveStatus();
         }
 
         /// <summary>
         /// Save a universe to a file.
         /// </summary>
         private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            PauseSim();
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.Filter = "All Files|*.*|Cells|*.cells";
             dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
@@ -441,6 +446,7 @@ namespace GameOfLife {
         /// Load a universe from a file.
         /// </summary>
         private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            PauseSim();
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "All Files|*.*|Cells|*.cells";
             dlg.FilterIndex = 2;
@@ -500,6 +506,27 @@ namespace GameOfLife {
                 }
             }
             ForceRedraw(null, null);
+        }
+
+        private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
+            frmGetNewSize resizer = new frmGetNewSize();
+            resizer.ShowDialog();
+            if (resizer.DialogResult == DialogResult.OK) {
+                UniverseSize = new Size(resizer.NewWidth, resizer.NewHeight);
+            }
+            ForceRedraw(null, null);
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        }
+
+        private void changeUniverseSizeToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        }
+
+        private void customizeToolStripMenuItem_Click(object sender, EventArgs e) {
+
         }
 
         private void UpdateAliveStatus() {
