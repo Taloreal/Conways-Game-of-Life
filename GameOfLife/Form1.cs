@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,42 +16,147 @@ namespace GameOfLife {
     public partial class Form1 : Form {
 
         // The universe array
-        bool[,] universe = new bool[5, 5];
+        bool[,] universe = new bool[30, 30];
 
-        // Drawing colors
-        Color gridColor = Color.Black;
-        Color inactiveColor = Color.White;
-        Color activeColor = Color.LightGray;
+        #region Drawing Colors
+        KnownColor GridColor {
+            get {
+                if (!Settings.GetValue("gridClr", out int val)) {
+                    val = 35; // KnownColor.Black;
+                }
+                return (KnownColor)val;
+            }
+            set { Settings.SetValue("gridClr", (int)value); }
+        }
+
+        KnownColor InactiveColor {
+            get {
+                if (!Settings.GetValue("inactiveClr", out int val)) {
+                    val = 164; //KnownColor.White;
+                }
+                return (KnownColor)val;
+            }
+            set { Settings.SetValue("inactiveClr", (int)value); }
+        }
+
+        KnownColor ActiveColor {
+            get {
+                if (!Settings.GetValue("activeClr", out int val)) {
+                    val = 95; // KnownColor.LightGray;
+                }
+                return (KnownColor)val;
+            }
+            set { Settings.SetValue("activeClr", (int)value); }
+        }
+        #endregion
 
         // The Timer class
         Timer timer = new Timer();
 
-        // Generation count
-        int generations = 0;
+        // Generations
+        int Generations = 0;
+
+        const int minSpeed = 100, maxSpeed = 1000;
+
+        int Interval {
+            get {
+                if (!Settings.GetValue("interval", out int val)) {
+                    val = timer.Interval;
+                    ToggleSpeedButtons();
+                }
+                else if (val != timer.Interval) {
+                    val = (val > maxSpeed ? maxSpeed : val) < minSpeed ? minSpeed : val;
+                    Settings.SetValue("interval", val);
+                    timer.Interval = val;
+                    ToggleSpeedButtons();
+                }
+                return val;
+            }
+            set {
+                //limit the interval to between minSpeed (100) and maxSpeed (1000).
+                value = (value > maxSpeed ? maxSpeed : value) < minSpeed ? minSpeed : value;
+                Settings.SetValue("interval", value);
+                timer.Interval = value;
+                ToggleSpeedButtons();
+            }
+        }
+
+        Size UniverseSize {
+            get {
+                if (!Settings.GetValue("width", out int width)) {
+                    width = universe.GetLength(0);
+                }
+                if (!Settings.GetValue("height", out int height)) {
+                    height = universe.GetLength(1);
+                }
+                if (width != universe.GetLength(0) || height != universe.GetLength(1)) {
+                    UpdateUniverseSize(new Size(width, height));
+                }
+                return new Size(universe.GetLength(0), universe.GetLength(1)); 
+            }
+            set {
+                bool sameWidth = value.Width == universe.GetLength(0);
+                bool sameHeight = value.Height == universe.GetLength(1);
+                if (sameWidth && sameHeight) {
+                    Settings.SetValue("width", value.Width);
+                    Settings.SetValue("height", value.Height);
+                    return;
+                }
+                UpdateUniverseSize(value); 
+            }
+        }
+
+        bool Toroidal { 
+            get {
+                if (!Settings.GetValue("toroidal", out bool toroidal)) {
+                    toroidal = toroidalToolStripMenuItem.Checked;
+                    Settings.SetValue("toroidal", toroidal);
+                }
+                else if (toroidalToolStripMenuItem.Checked != toroidal) { 
+                    toroidalToolStripMenuItem.Checked = toroidal; 
+                }
+                return toroidal;
+            }
+            set {
+                Settings.SetValue("toroidal", value);
+                toroidalToolStripMenuItem.Checked = value;
+            }
+        }
+
 
         public Form1() {
             InitializeComponent();
-            // Get color settings
-            gridColor = Settings.GetValue("gridClr", out int clr) ?
-                Color.FromKnownColor((KnownColor)clr) : gridColor;
-            activeColor = Settings.GetValue("activeClr", out clr) ?
-                Color.FromKnownColor((KnownColor)clr) : activeColor;
-            inactiveColor = Settings.GetValue("inactiveClr", out clr) ?
-                Color.FromKnownColor((KnownColor)clr) : inactiveColor;
+
+            Toroidal = Toroidal;
+
             // Generate new universe if settings specify a size.
-            universe = (Settings.GetValue("width", out int width) &&
-                Settings.GetValue("height", out int height)) ?
-                new bool[width, height] : universe;
+            bool widthed = Settings.GetValue("width", out int width);
+            bool heighted = Settings.GetValue("height", out int height);
+            UniverseSize = (widthed && heighted) ? new Size(width, height) :
+                 new Size(universe.GetLength(0), universe.GetLength(1));
+
             // Setup the timer
-            timer.Interval = Settings.GetValue("interval", 
-                out int interval) ? interval : 300; // milliseconds
+            timer.Interval = 300; // default
             timer.Tick += Timer_Tick;
             timer.Enabled = false; // start timer running
-            fasterToolStripButton.Enabled = Settings.GetValue("faster", 
-                out bool faster) ? faster : true;
-            slowerToolStripButton.Enabled = Settings.GetValue("slower", 
-                out bool slower) ? slower : true;
-            UpdateUIInterval();
+
+            ToggleSpeedButtons();
+        }
+
+        /// <summary>
+        /// Recreates the universe with a new size, preserves what data possible.
+        /// </summary>
+        /// <param name="size">The new size of the universe.</param>
+        private void UpdateUniverseSize(Size size) {
+            bool[,] sketch = new bool[size.Width, size.Height];
+            for (int x = 0; x < size.Width && x < universe.GetLength(0); x++) {
+                for (int y = 0; y < size.Height && y < universe.GetLength(1); y++) {
+                    sketch[x, y] = universe[x, y];
+                }
+            }
+            Settings.SetValue("width", size.Width);
+            Settings.SetValue("height", size.Height);
+            universe = sketch;
         }
 
         // Calculate the next generation of cells
@@ -66,10 +172,11 @@ namespace GameOfLife {
             universe = next;
 
             // Increment generation count
-            generations++;
+            Generations++;
 
             // Update status strip generations
-            toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
+            toolStripStatusLabelGenerations.Text = 
+                "Generations = " + Generations.ToString() + ", ";
         }
 
         /// <summary>
@@ -105,16 +212,12 @@ namespace GameOfLife {
         /// </summary>
         /// <param name="x">The x position of the cell.</param>
         /// <param name="y">The y position of the cell.</param>
-        /// <param name="toroidal">Should the universe wrap around?</param>
         /// <returns>The alive or dead state of the cell.</returns>
         private bool GetState(int x, int y) {
-            if (!Settings.GetValue("toroidal", out bool toroidal)) {
-                Settings.SetValue("toroidal", toroidal);
-            }
-            while (x < 0 && toroidal) { x += universe.GetLength(0); }
-            while (x >= universe.GetLength(0) && toroidal) { x -= universe.GetLength(0); }
-            while (y < 0 && toroidal) { y += universe.GetLength(1); }
-            while (y >= universe.GetLength(1) && toroidal) { y -= universe.GetLength(1); }
+            while (x < 0 && Toroidal) { x += universe.GetLength(0); }
+            while (x >= universe.GetLength(0) && Toroidal) { x -= universe.GetLength(0); }
+            while (y < 0 && Toroidal) { y += universe.GetLength(1); }
+            while (y >= universe.GetLength(1) && Toroidal) { y -= universe.GetLength(1); }
             if (x < 0 || x >= universe.GetLength(0)) { return false; }
             if (y < 0 || y >= universe.GetLength(1)) { return false; }
             return universe[x, y];
@@ -134,11 +237,11 @@ namespace GameOfLife {
             int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
 
             // A Pen for drawing the grid lines (color, width)
-            Pen gridPen = new Pen(gridColor, 1);
+            Pen gridPen = new Pen(Color.FromKnownColor(GridColor), 1);
 
             // A Brush for filling living cells interiors (color)
-            Brush liveBrush = new SolidBrush(activeColor);
-            Brush deadBrush = new SolidBrush(inactiveColor);
+            Brush liveBrush = new SolidBrush(Color.FromKnownColor(ActiveColor));
+            Brush deadBrush = new SolidBrush(Color.FromKnownColor(InactiveColor));
 
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < universe.GetLength(1); y++) {
@@ -154,8 +257,11 @@ namespace GameOfLife {
                     // Fill the cell with alive or dead brush.
                     e.Graphics.FillRectangle(universe[x, y] == true ? 
                         liveBrush : deadBrush, cellRect);
+
                     // Outline the cell with a pen
-                    e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    if (gridToolStripMenuItem.Checked) {
+                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    }
                 }
             }
             // Cleaning up pens and brushes
@@ -199,38 +305,25 @@ namespace GameOfLife {
         /// Slows down the timer's interval.
         /// </summary>
         private void slowerToolStripButton_Click(object sender, EventArgs e) {
-            int interval = (Settings.GetValue("interval", out int pinterval) ?
-                pinterval : timer.Interval) + 100;
-            SaveIntervalSettings(interval);
+            Interval += 100;
+            ToggleSpeedButtons();
         }
 
         /// <summary>
         /// Speeds up the timer's interval.
         /// </summary>
         private void fasterToolStripButton_Click(object sender, EventArgs e) {
-            int interval = (Settings.GetValue("interval", out int pinterval) ?
-                pinterval : timer.Interval) - 100;
-            SaveIntervalSettings(interval);
+            Interval -= 100;
+            ToggleSpeedButtons();
         }
 
         /// <summary>
-        /// Sets the timer's interval and save's the settings.
+        /// Toggles the speed buttons and updates the interval displayed.
         /// </summary>
-        /// <param name="interval">The new interval to use.</param>
-        private void SaveIntervalSettings(int interval) {
-            //limit the interval to between 100 to 1000.
-            interval = (interval > 1000 ? 1000 : interval) < 100 ? 100 : interval;
-            timer.Interval = interval;
-            Settings.SetValue("interval", timer.Interval);
-            fasterToolStripButton.Enabled = timer.Interval > 100;
-            slowerToolStripButton.Enabled = timer.Interval < 1000;
-            Settings.SetValue("faster", fasterToolStripButton.Enabled);
-            Settings.SetValue("slower", slowerToolStripButton.Enabled);
-            UpdateUIInterval();
-        }
-
-        private void UpdateUIInterval() {
-            toolStripStatusLabelInterval.Text = "Interval = " + timer.Interval + " ms ";
+        private void ToggleSpeedButtons() {
+            fasterToolStripButton.Enabled = Interval > minSpeed;
+            slowerToolStripButton.Enabled = Interval < maxSpeed;
+            toolStripStatusLabelInterval.Text = "Interval = " + Interval + " ms, ";
         }
 
         /// <summary>
@@ -243,9 +336,124 @@ namespace GameOfLife {
             graphicsPanel1.Invalidate();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
+        /// <summary>
+        /// Force the application to close.
+        /// </summary>
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
+            Application.Exit();
+        }
+
+        /// <summary>
+        /// Change boundary rules and force redraw.
+        /// </summary>
+        private void toroidalToolStripMenuItem_Click(object sender, EventArgs e) {
+            Toroidal = !toroidalToolStripMenuItem.Checked;
+            ForceRedraw(null, null);
+        }
+
+        /// <summary>
+        /// Reload settings from last time app opened.
+        /// </summary>
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (Settings.ReloadSettings()) {
+                bool worked = Settings.GetValue("width", out int width);
+                width = worked ? width : universe.GetLength(0);
+                worked = Settings.GetValue("height", out int height);
+                height = worked ? height : universe.GetLength(1);
+                UniverseSize = new Size(width, height);
+                worked = Settings.GetValue("interval", out int interval);
+                Interval = worked ? interval : Interval;
+                worked = Settings.GetValue("toroidal", out bool toro);
+                Toroidal = worked ? toro : Toroidal;
+                worked = Settings.GetValue("gridClr", out int clr);
+                GridColor = worked ? (KnownColor)clr : GridColor;
+                worked = Settings.GetValue("inactiveClr", out clr);
+                InactiveColor = worked ? (KnownColor)clr : InactiveColor;
+                worked = Settings.GetValue("activeClr", out clr);
+                ActiveColor = worked ? (KnownColor)clr : ActiveColor;
+                ForceRedraw(null, null);
+            }
+        }
+
+        /// <summary>
+        /// Reset all settings to defaults.
+        /// </summary>
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e) {
+            Settings.Clear();
+            UniverseSize = new Size(30, 30);
+            Interval = 300;
+            Toroidal = false;
+            GridColor = KnownColor.Black;
+            InactiveColor = KnownColor.White;
+            ActiveColor = KnownColor.LightGray;
+            ForceRedraw(null, null);
+        }
+
+        /// <summary>
+        /// Save a universe to a file.
+        /// </summary>
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
+            if (DialogResult.OK == dlg.ShowDialog()) {
+                Size usize = UniverseSize;
+                StreamWriter writer = new StreamWriter(dlg.FileName);
+                writer.WriteLine("!This is my comment.");
+                for (int y = 0; y < usize.Height; y++) {
+                    string row = "";
+                    for (int x = 0; x < usize.Width; x++) {
+                        row += universe[x, y] ? "0" : ".";
+                    }
+                    writer.WriteLine(row);
+                }
+                writer.Close();
+            }
+            ForceRedraw(null, null);
+        }
+
+        /// <summary>
+        /// Load a universe from a file.
+        /// </summary>
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
+            if (DialogResult.OK == dlg.ShowDialog()) {
+                StreamReader reader = new StreamReader(dlg.FileName);
+                int maxWidth = 0;
+                int maxHeight = 0;
+                //read each line and store in a list.
+                List<string> rows = new List<string>();
+                while (!reader.EndOfStream) {
+                    string row = reader.ReadLine();
+                    if (row.Length == 0 || row[0] == '!') { continue; }
+                    rows.Add(row);
+                    maxWidth = row.Length > maxWidth ? row.Length : maxWidth;
+                    maxHeight += 1;
+                }
+                reader.Close(); //read file only once and close ASAP
+                //recreate the file's universe.
+                universe = new bool[maxWidth, maxHeight];
+                for (int y = 0; y < rows.Count; y++) {
+                    for (int x = 0; x < rows[y].Length; x++) {
+                        //cell is only alive if '0'
+                        universe[x, y] = rows[y][x] == '0';
+                    }
+                }
+            }
+            ForceRedraw(null, null);
+        }
+
+        /// <summary>
+        /// Force the graphics panel to redraw.
+        /// </summary>
+        private void ForceRedraw(object sender, EventArgs e) {
+            if (sender != null && sender is ToolStripMenuItem) {
+                ToolStripMenuItem item = (ToolStripMenuItem)sender;
+                item.Checked = !item.Checked;
+            }
+            graphicsPanel1.Invalidate();
         }
     }
 }

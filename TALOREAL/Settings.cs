@@ -75,6 +75,18 @@ namespace TALOREAL {
         /// </summary>
         static Settings() { LoadSettings(); }
 
+        public static bool ReloadSettings() {
+            if (File.Exists("Settings.TAL")) {
+                File.Delete("Settings.TAL");
+            }
+            if (File.Exists("Backup.TAL")) { 
+                File.Copy("Backup.TAL", "Settings.TAL");
+                LoadSettings();
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Loads a previously saved database.
         /// </summary>
@@ -88,6 +100,10 @@ namespace TALOREAL {
                     Database = (SerializableDictionary<string, string>)
                         serializer.Deserialize(reader);
                     reader.Close();
+                    if (File.Exists("Backup.TAL")) { 
+                        File.Delete("Backup.TAL"); 
+                    }
+                    File.Copy("Settings.TAL", "Backup.TAL");
                     return true;
                 }
                 catch { reader.Close(); return false; }
@@ -106,8 +122,8 @@ namespace TALOREAL {
                     XmlSerializer serializer = new XmlSerializer(typeof(SerializableDictionary<string, string>));
                     serializer.Serialize(writer, Database);
                     writer.Close();
-                    if (File.Exists("Settings.TAL")) {
-                        File.Delete("Settings.TAL");
+                    if (File.Exists("Settings.TAL")) { 
+                        File.Delete("Settings.TAL"); 
                     }
                     File.Move("temp.TAL", "Settings.TAL");
                     return true;
