@@ -81,6 +81,16 @@ namespace GameOfLife {
             }
         }
 
+        int RandomSeed {
+            get {
+                if (!Settings.GetValue("seed", out int val)) {
+                    Settings.SetValue("seed", val);
+                }
+                return val;
+            } 
+            set { Settings.SetValue("seed", value); }
+        }
+
         Size UniverseSize {
             get {
                 if (!Settings.GetValue("width", out int width)) {
@@ -141,6 +151,7 @@ namespace GameOfLife {
             timer.Enabled = false; // start timer running
 
             ToggleSpeedButtons();
+            ForceRedraw(null, null);
         }
 
         /// <summary>
@@ -177,6 +188,7 @@ namespace GameOfLife {
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = 
                 "Generations = " + Generations.ToString() + ", ";
+            UpdateAliveStatus();
         }
 
         /// <summary>
@@ -238,6 +250,8 @@ namespace GameOfLife {
 
             // A Pen for drawing the grid lines (color, width)
             Pen gridPen = new Pen(Color.FromKnownColor(GridColor), 1);
+            Font drawFont = new Font(FontFamily.GenericSansSerif, cellWidth / 4.0f);
+            Brush gridBrush = new SolidBrush(Color.FromKnownColor(GridColor));
 
             // A Brush for filling living cells interiors (color)
             Brush liveBrush = new SolidBrush(Color.FromKnownColor(ActiveColor));
@@ -257,6 +271,11 @@ namespace GameOfLife {
                     // Fill the cell with alive or dead brush.
                     e.Graphics.FillRectangle(universe[x, y] == true ? 
                         liveBrush : deadBrush, cellRect);
+                    int neighborsOn = GetNeighborsActive(x, y);
+                    if (neighborsOn > 0 && neighborCountsToolStripMenuItem.Checked) {
+                        e.Graphics.DrawString(neighborsOn.ToString(),
+                            drawFont, gridBrush, cellRect);
+                    }
 
                     // Outline the cell with a pen
                     if (gridToolStripMenuItem.Checked) {
@@ -267,6 +286,7 @@ namespace GameOfLife {
             // Cleaning up pens and brushes
             liveBrush.Dispose();
             deadBrush.Dispose();
+            gridBrush.Dispose();
             gridPen.Dispose();
         }
 
@@ -289,6 +309,7 @@ namespace GameOfLife {
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
             }
+            UpdateAliveStatus();
         }
 
         /// <summary>
@@ -334,6 +355,7 @@ namespace GameOfLife {
             startStopToolStripButton.Image = global::GameOfLife.Properties.Resources.Start;
             universe = new bool[universe.GetLength(0), universe.GetLength(1)];
             graphicsPanel1.Invalidate();
+            UpdateAliveStatus();
         }
 
         /// <summary>
@@ -363,6 +385,8 @@ namespace GameOfLife {
                 UniverseSize = new Size(width, height);
                 worked = Settings.GetValue("interval", out int interval);
                 Interval = worked ? interval : Interval;
+                worked = Settings.GetValue("seed", out int seed);
+                RandomSeed = worked ? seed : RandomSeed;
                 worked = Settings.GetValue("toroidal", out bool toro);
                 Toroidal = worked ? toro : Toroidal;
                 worked = Settings.GetValue("gridClr", out int clr);
@@ -382,6 +406,7 @@ namespace GameOfLife {
             Settings.Clear();
             UniverseSize = new Size(30, 30);
             Interval = 300;
+            RandomSeed = 0;
             Toroidal = false;
             GridColor = KnownColor.Black;
             InactiveColor = KnownColor.White;
@@ -453,7 +478,38 @@ namespace GameOfLife {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
                 item.Checked = !item.Checked;
             }
+            toolStripStatusSeed.Text = "Random Seed = " + RandomSeed + ", ";
             graphicsPanel1.Invalidate();
+            UpdateAliveStatus();
+        }
+
+        private void changeRandomizerSeedToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        }
+
+        private void setRandomizerSeedToTimeToolStripMenuItem_Click(object sender, EventArgs e) {
+            RandomSeed = (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
+            ForceRedraw(null, null);
+        }
+
+        private void randomizeToolStripMenuItem_Click(object sender, EventArgs e) {
+            Random rng = new Random(RandomSeed);
+            for (int x = 0; x < universe.GetLength(0); x++) {
+                for (int y = 0; y < universe.GetLength(1); y++) {
+                    universe[x, y] = rng.Next(0, 100) % 2 == 1;
+                }
+            }
+            ForceRedraw(null, null);
+        }
+
+        private void UpdateAliveStatus() {
+            int alive = 0;
+            for (int x = 0; x < universe.GetLength(0); x++) {
+                for (int y = 0; y < universe.GetLength(1); y++) {
+                    if (universe[x, y]) { alive++; }
+                }
+            }
+            toolStripStatusAlive.Text = "Alive = " + alive + ", ";
         }
     }
 }

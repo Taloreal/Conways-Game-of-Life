@@ -68,6 +68,8 @@ namespace GameOfLife
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripStatusAlive = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusSeed = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -122,7 +124,7 @@ namespace GameOfLife
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(177, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -137,12 +139,12 @@ namespace GameOfLife
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -194,18 +196,21 @@ namespace GameOfLife
             this.changeRandomizerSeedToolStripMenuItem.Name = "changeRandomizerSeedToolStripMenuItem";
             this.changeRandomizerSeedToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.changeRandomizerSeedToolStripMenuItem.Text = "Change Randomizer Seed";
+            this.changeRandomizerSeedToolStripMenuItem.Click += new System.EventHandler(this.changeRandomizerSeedToolStripMenuItem_Click);
             // 
             // setRandomizerSeedToTimeToolStripMenuItem
             // 
             this.setRandomizerSeedToTimeToolStripMenuItem.Name = "setRandomizerSeedToTimeToolStripMenuItem";
             this.setRandomizerSeedToTimeToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.setRandomizerSeedToTimeToolStripMenuItem.Text = "Set Randomizer Seed to Time";
+            this.setRandomizerSeedToTimeToolStripMenuItem.Click += new System.EventHandler(this.setRandomizerSeedToTimeToolStripMenuItem_Click);
             // 
             // randomizeToolStripMenuItem
             // 
             this.randomizeToolStripMenuItem.Name = "randomizeToolStripMenuItem";
             this.randomizeToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.randomizeToolStripMenuItem.Text = "Randomize";
+            this.randomizeToolStripMenuItem.Click += new System.EventHandler(this.randomizeToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -234,7 +239,7 @@ namespace GameOfLife
             this.hudToolStripMenuItem.Checked = true;
             this.hudToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.hudToolStripMenuItem.Name = "hudToolStripMenuItem";
-            this.hudToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.hudToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.hudToolStripMenuItem.Text = "HUD";
             this.hudToolStripMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -243,7 +248,7 @@ namespace GameOfLife
             this.neighborCountsToolStripMenuItem.Checked = true;
             this.neighborCountsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.neighborCountsToolStripMenuItem.Name = "neighborCountsToolStripMenuItem";
-            this.neighborCountsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.neighborCountsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.neighborCountsToolStripMenuItem.Text = "Neighbor Counts";
             this.neighborCountsToolStripMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -252,7 +257,7 @@ namespace GameOfLife
             this.gridToolStripMenuItem.Checked = true;
             this.gridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
-            this.gridToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gridToolStripMenuItem.Text = "Grid";
             this.gridToolStripMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -350,7 +355,9 @@ namespace GameOfLife
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelGenerations,
-            this.toolStripStatusLabelInterval});
+            this.toolStripStatusLabelInterval,
+            this.toolStripStatusAlive,
+            this.toolStripStatusSeed});
             this.statusStrip1.Location = new System.Drawing.Point(0, 323);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(573, 22);
@@ -399,6 +406,18 @@ namespace GameOfLife
             this.resetToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
+            // 
+            // toolStripStatusAlive
+            // 
+            this.toolStripStatusAlive.Name = "toolStripStatusAlive";
+            this.toolStripStatusAlive.Size = new System.Drawing.Size(59, 17);
+            this.toolStripStatusAlive.Text = "Alive = 0, ";
+            // 
+            // toolStripStatusSeed
+            // 
+            this.toolStripStatusSeed.Name = "toolStripStatusSeed";
+            this.toolStripStatusSeed.Size = new System.Drawing.Size(103, 17);
+            this.toolStripStatusSeed.Text = "Random Seed = 0,";
             // 
             // Form1
             // 
@@ -463,6 +482,8 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusAlive;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusSeed;
     }
 }
 
