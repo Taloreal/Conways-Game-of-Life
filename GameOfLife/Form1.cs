@@ -351,5 +351,10 @@ namespace GameOfLife {
             }
             ForceRedraw(null, null);
         }
+
+        private void nextToolStripButton_Click(object sender, EventArgs e)
+        {
+            Config.Universe.NextGeneration();
+        }
     }
 }

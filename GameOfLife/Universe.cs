@@ -106,7 +106,7 @@ namespace GameOfLife {
         /// <summary>
         /// Calculate the next generation of cells.
         /// </summary>
-        private void NextGeneration() {
+        public void NextGeneration() {
             bool[,] next = new bool[Width, Height];
             for (int x = 0; x < Width; x++) {
                 for (int y = 0; y < Height; y++) {

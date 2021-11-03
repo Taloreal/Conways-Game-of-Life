@@ -170,33 +170,33 @@ namespace GameOfLife
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.customizeToolStripMenuItem.Text = "Customize Colors";
             this.customizeToolStripMenuItem.Click += new System.EventHandler(this.customizeToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.optionsToolStripMenuItem.Text = "Change Interval";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(204, 6);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.reloadToolStripMenuItem.Text = "Reload Settings";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.resetToolStripMenuItem.Text = "Reset Settings";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -268,7 +268,7 @@ namespace GameOfLife
             this.hudMenuItem.Checked = true;
             this.hudMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.hudMenuItem.Name = "hudMenuItem";
-            this.hudMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.hudMenuItem.Size = new System.Drawing.Size(204, 26);
             this.hudMenuItem.Text = "HUD";
             this.hudMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -277,7 +277,7 @@ namespace GameOfLife
             this.countsMenuItem.Checked = true;
             this.countsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.countsMenuItem.Name = "countsMenuItem";
-            this.countsMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.countsMenuItem.Size = new System.Drawing.Size(204, 26);
             this.countsMenuItem.Text = "Neighbor Counts";
             this.countsMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -286,7 +286,7 @@ namespace GameOfLife
             this.gridMenuItem.Checked = true;
             this.gridMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.gridMenuItem.Name = "gridMenuItem";
-            this.gridMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.gridMenuItem.Size = new System.Drawing.Size(204, 26);
             this.gridMenuItem.Text = "Grid";
             this.gridMenuItem.Click += new System.EventHandler(this.ForceRedraw);
             // 
@@ -361,6 +361,7 @@ namespace GameOfLife
             this.nextToolStripButton.Name = "nextToolStripButton";
             this.nextToolStripButton.Size = new System.Drawing.Size(29, 24);
             this.nextToolStripButton.Text = "&Next";
+            this.nextToolStripButton.Click += new System.EventHandler(this.nextToolStripButton_Click);
             // 
             // slowerToolStripButton
             // 
