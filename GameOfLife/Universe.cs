@@ -68,8 +68,8 @@ namespace GameOfLife {
         public bool GetBoundaryType(bool menuState) {
             bool fetched = Settings.GetValue("toroidal", out bool toroidal);
             if (!fetched) {
-                Settings.SetValue("toroidal", menuState);
                 toroidal = menuState;
+                Settings.SetValue("toroidal", menuState);
                 ForceRedraw?.Invoke(null, null);
             }
             return toroidal;
@@ -161,7 +161,26 @@ namespace GameOfLife {
             return ((neighborsOn == 3) || (active && neighborsOn > 1 && neighborsOn < 4));
         }
 
-        public Bitmap Draw() {
+        public Bitmap DrawHUD() {
+            Bitmap bmp = new Bitmap(350, 200);
+            Graphics gx = Graphics.FromImage(bmp);
+            Font drawFont = new Font(FontFamily.GenericSansSerif, 13f);
+            Brush drawBrush = new SolidBrush(Color.FromKnownColor(
+                KnownColor.Red));
+            gx.DrawString("Generation: " + Generation, drawFont, 
+                drawBrush, new Point(10, 135));
+            gx.DrawString("Cell Count: " + CountAlive(), drawFont,
+                drawBrush, new Point(10, 150));
+            string bound = GetBoundaryType(false) ? "Toroidal" : "Finite";
+            gx.DrawString("Boundary Type: " + bound, drawFont,
+                drawBrush, new Point(10, 165));
+            gx.DrawString("Universe Size: { Width = " + Width + ", Height = " + Height + " }", 
+                drawFont, drawBrush, new Point(10, 180));
+            gx.Dispose();
+            return bmp;
+        }
+
+        public Bitmap DrawUniverse() {
             int cellWidth = 30, cellHeight = 30;
             Bitmap bmp = new Bitmap(cellWidth * Width, cellHeight * Height);
             Graphics gx = Graphics.FromImage(bmp);
@@ -202,6 +221,12 @@ namespace GameOfLife {
                     }
                 }
             }
+            if (Config.DisplayHUD) {
+                Rectangle hudRect = new Rectangle(
+                    bmp.Width / 200, bmp.Height / 2,
+                    bmp.Width / 3, (bmp.Height / 2) - 30);
+                gx.DrawImage(DrawHUD(), hudRect);
+            }
             // Cleaning up pens and brushes
             liveBrush.Dispose();
             deadBrush.Dispose();
@@ -229,5 +254,14 @@ namespace GameOfLife {
             universe[x, y] = state;
         }
 
+        public int CountAlive() {
+            int alive = 0;
+            for (int x = 0; x < Width; x++) {
+                for (int y = 0; y < Height; y++) {
+                    alive += universe[x, y] ? 1 : 0;
+                }
+            }
+            return alive;
+        }
     }
 }

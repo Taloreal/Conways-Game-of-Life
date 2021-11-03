@@ -15,7 +15,7 @@ namespace GameOfLife {
     public static class Config {
 
         private static Timer Timer = new Timer();
-        public const int MinSpeed = 100, MaxSpeed = 1000;
+        public const int MinSpeed = 5, MaxSpeed = 1000;
         public static Universe Universe = new Universe();
 
         public static event EventHandler ForceRedraw;
@@ -91,7 +91,8 @@ namespace GameOfLife {
                     ForceRedraw?.Invoke(null, null);
                 }
                 else if (val != Timer.Interval) {
-                    val = (val > MaxSpeed ? MaxSpeed : val) < MinSpeed ? MinSpeed : val;
+                    val = val > MaxSpeed ? MaxSpeed : val;
+                    val = val < MinSpeed ? MinSpeed : val;
                     Timer.Interval = val;
                     Settings.SetValue("interval", val);
                     ForceRedraw?.Invoke(null, null);
@@ -99,8 +100,9 @@ namespace GameOfLife {
                 return val;
             }
             set {
-                //limit the interval to between minSpeed (100) and maxSpeed (1000).
-                value = (value > MaxSpeed ? MaxSpeed : value) < MinSpeed ? MinSpeed : value;
+                //limit the interval to between minSpeed (50) and maxSpeed (1000).
+                value = value > MaxSpeed ? MaxSpeed : value;
+                value = value < MinSpeed ? MinSpeed : value;
                 Timer.Interval = value;
                 Settings.SetValue("interval", value);
                 ForceRedraw?.Invoke(null, null);

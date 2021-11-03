@@ -42,7 +42,7 @@ namespace GameOfLife {
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
             //UniverseDrawn(Config.Universe.Draw());
-            Bitmap bmp = Config.Universe.Draw();
+            Bitmap bmp = Config.Universe.DrawUniverse();
             e.Graphics.DrawImage(bmp, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
         }
 
@@ -82,7 +82,7 @@ namespace GameOfLife {
         /// Slows down the timer's interval.
         /// </summary>
         private void slowerToolStripButton_Click(object sender, EventArgs e) {
-            Config.Interval += 100;
+            Config.Interval *= 2;
             ToggleSpeedButtons();
         }
 
@@ -90,7 +90,7 @@ namespace GameOfLife {
         /// Speeds up the timer's interval.
         /// </summary>
         private void fasterToolStripButton_Click(object sender, EventArgs e) {
-            Config.Interval -= 100;
+            Config.Interval /= 2;
             ToggleSpeedButtons();
         }
 
@@ -254,7 +254,7 @@ namespace GameOfLife {
             gridMenuItem.Checked = Config.DisplayGrid;
             countsMenuItem.Checked = Config.DisplayCounts;
             toroidalMenuItem.Checked = Config.Universe.GetBoundaryType(false);
-            toolStripStatusAlive.Text = "Alive = " + GetAllAlive() + ", ";
+            toolStripStatusAlive.Text = "Alive = " + Config.Universe.CountAlive() + ", ";
             toolStripStatusSeed.Text = "Random Seed = " + Config.RandomSeed + ", ";
             toolStripStatusLabelInterval.Text = "Interval = " + Config.Interval + " ms, ";
             toolStripStatusLabelGenerations.Text = "Generations = " + 
@@ -317,16 +317,6 @@ namespace GameOfLife {
                 Config.InactiveColor = GetColors.InactiveColor;
             }
             ForceRedraw(null, null);
-        }
-
-        private int GetAllAlive() {
-            int alive = 0;
-            for (int x = 0; x < Config.Universe.Width; x++) {
-                for (int y = 0; y < Config.Universe.Height; y++) {
-                    if (Config.Universe.GetState(x, y)) { alive++; }
-                }
-            }
-            return alive;
         }
     }
 }
