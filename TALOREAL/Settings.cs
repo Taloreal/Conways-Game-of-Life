@@ -70,28 +70,19 @@ namespace TALOREAL {
                 { p = DateTime.TryParse(s, out DateTime val); return val; } },
         };
 
+        public static bool Autosave = false;
+
         /// <summary>
         /// Automatically loads the previously saved database.
         /// </summary>
         static Settings() { LoadSettings(); }
 
-        public static bool ReloadSettings() {
-            if (File.Exists("Settings.TAL")) {
-                File.Delete("Settings.TAL");
-            }
-            if (File.Exists("Backup.TAL")) { 
-                File.Copy("Backup.TAL", "Settings.TAL");
-                LoadSettings();
-                return true;
-            }
-            return false;
-        }
-
         /// <summary>
         /// Loads a previously saved database.
         /// </summary>
         /// <returns>A value determining success/failure.</returns>
-        private static bool LoadSettings() {
+        public static bool LoadSettings() {
+            Clear();
             try {
                 TextReader reader = new StreamReader(File.Open(@"Settings.TAL", FileMode.Open));
                 try {
@@ -115,7 +106,7 @@ namespace TALOREAL {
         /// Saves the database to the local file system.
         /// </summary>
         /// <returns>A value determining success/failure.</returns>
-        private static bool SaveSettings() {
+        public static bool SaveSettings() {
             try {
                 TextWriter writer = new StreamWriter(File.Open(@"temp.TAL", FileMode.OpenOrCreate));
                 try {
@@ -180,7 +171,7 @@ namespace TALOREAL {
             bool inDatabase = GetValue<T>(key, out T old);
             RemoveOld<T>(key);
             Database.Add(STKey, obj.ToString());
-            SaveSettings();
+            if (Autosave) { SaveSettings(); }
             if (inDatabase && OnChanged.ContainsKey(STKey)) {
                 OnChanged[STKey](key, typeof(T), old, obj);
             }
@@ -236,7 +227,7 @@ namespace TALOREAL {
             if (!IsGoodKey(key, typeof(T), out key)) { return false; }
             if (Database.ContainsKey(key)) {
                 Database.Remove(key);
-                SaveSettings();
+                if (Autosave) { SaveSettings(); }
                 return true;
             }
             return false;
@@ -247,7 +238,7 @@ namespace TALOREAL {
         /// </summary>
         public static void Clear() {
             Database.Clear();
-            SaveSettings();
+            if (Autosave) { SaveSettings(); }
         }
     }
 }

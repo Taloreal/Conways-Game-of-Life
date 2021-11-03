@@ -131,26 +131,25 @@ namespace GameOfLife {
         /// Reload settings from last time app opened.
         /// </summary>
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (Settings.ReloadSettings()) {
-                bool worked = Settings.GetValue("width", out int width);
-                width = worked ? width : Config.Universe.Width;
-                worked = Settings.GetValue("height", out int height);
-                height = worked ? height : Config.Universe.Height;
-                Config.UniverseSize = new Size(width, height);
-                worked = Settings.GetValue("interval", out int interval);
-                Config.Interval = worked ? interval : Config.Interval;
-                worked = Settings.GetValue("seed", out int seed);
-                Config.RandomSeed = worked ? seed : Config.RandomSeed;
-                worked = Settings.GetValue("toroidal", out bool toro);
-                Config.Universe.SetBoundaryType(worked ? toro : Config.Universe.GetBoundaryType(false));
-                worked = Settings.GetValue("gridClr", out int clr);
-                Config.GridColor = worked ? (KnownColor)clr : Config.GridColor;
-                worked = Settings.GetValue("inactiveClr", out clr);
-                Config.InactiveColor = worked ? (KnownColor)clr : Config.InactiveColor;
-                worked = Settings.GetValue("activeClr", out clr);
-                Config.ActiveColor = worked ? (KnownColor)clr : Config.ActiveColor;
-                ForceRedraw(null, null);
-            }
+            Settings.LoadSettings();
+            bool worked = Settings.GetValue("width", out int width);
+            width = worked ? width : Config.Universe.Width;
+            worked = Settings.GetValue("height", out int height);
+            height = worked ? height : Config.Universe.Height;
+            Config.UniverseSize = new Size(width, height);
+            worked = Settings.GetValue("interval", out int interval);
+            Config.Interval = worked ? interval : Config.Interval;
+            worked = Settings.GetValue("seed", out int seed);
+            Config.RandomSeed = worked ? seed : Config.RandomSeed;
+            worked = Settings.GetValue("toroidal", out bool toro);
+            Config.Universe.SetBoundaryType(worked ? toro : Config.Universe.GetBoundaryType(false));
+            worked = Settings.GetValue("gridClr", out int clr);
+            Config.GridColor = worked ? (KnownColor)clr : Config.GridColor;
+            worked = Settings.GetValue("inactiveClr", out clr);
+            Config.InactiveColor = worked ? (KnownColor)clr : Config.InactiveColor;
+            worked = Settings.GetValue("activeClr", out clr);
+            Config.ActiveColor = worked ? (KnownColor)clr : Config.ActiveColor;
+            ForceRedraw(null, null);
         }
 
         /// <summary>
