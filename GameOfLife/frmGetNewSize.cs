@@ -12,13 +12,26 @@ namespace GameOfLife {
 
     public partial class frmGetNewSize : Form {
 
+        /// <summary>
+        /// The new width.
+        /// </summary>
         public int NewWidth { get; private set; }
+
+        /// <summary>
+        /// The new height.
+        /// </summary>
         public int NewHeight { get; private set; }
 
+        /// <summary>
+        /// Creates a window to request a new size from the user.
+        /// </summary>
         public frmGetNewSize() {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Closes the dialogue box with the OK state.
+        /// </summary>
         private void okBtn_Click(object sender, EventArgs e) {
             bool widthed = int.TryParse(widthTbx.Text, out int width);
             bool heighted = int.TryParse(heightTbx.Text, out int height);
@@ -32,6 +45,9 @@ namespace GameOfLife {
             this.Close();
         }
 
+        /// <summary>
+        /// Closes the dialogue box without doing anything.
+        /// </summary>
         private void cancelBtn_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

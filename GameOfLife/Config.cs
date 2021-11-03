@@ -20,6 +20,9 @@ namespace GameOfLife {
 
         public static event EventHandler ForceRedraw;
 
+        /// <summary>
+        /// Initializes the timer and resets the universe.
+        /// </summary>
         static Config() {
             Timer.Interval = 300;
             Timer.Interval = Interval;
@@ -28,6 +31,9 @@ namespace GameOfLife {
             ResetUniverse();
         }
 
+        /// <summary>
+        /// Is the universe evolving?
+        /// </summary>
         public static bool Running {
             get { return Timer.Enabled; } 
             set { 
@@ -36,6 +42,9 @@ namespace GameOfLife {
             } 
         }
 
+        /// <summary>
+        /// The universe's size.
+        /// </summary>
         public static Size UniverseSize {
             get { return Universe.Size; }
             set { 
@@ -44,6 +53,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// The color of the grid.
+        /// </summary>
         public static KnownColor GridColor {
             get {
                 if (!Settings.GetValue("gridClr", out int val)) {
@@ -57,6 +69,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// The color of inactive cells.
+        /// </summary>
         public static KnownColor InactiveColor {
             get {
                 if (!Settings.GetValue("inactiveClr", out int val)) {
@@ -70,6 +85,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// The color of active cells.
+        /// </summary>
         public static KnownColor ActiveColor {
             get {
                 if (!Settings.GetValue("activeClr", out int val)) {
@@ -83,6 +101,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// The interval (ms) that the universe attempts to refresh at.
+        /// </summary>
         public static int Interval {
             get {
                 if (!Settings.GetValue("interval", out int val)) {
@@ -109,6 +130,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// The random seed the universe uses.
+        /// </summary>
         public static int RandomSeed {
             get {
                 if (!Settings.GetValue("seed", out int val)) {
@@ -122,6 +146,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// Should the universe draw the HUD?
+        /// </summary>
         public static bool DisplayHUD {
             get { return Settings.GetValue("HUD", out bool HUD) == false ? true : HUD; }
             set { 
@@ -130,6 +157,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// Should the universe draw the grid?
+        /// </summary>
         public static bool DisplayGrid {
             get { return Settings.GetValue("Grid", out bool grid) == false ? true : grid; }
             set { 
@@ -138,6 +168,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// Should the universe draw active neighbor counts?
+        /// </summary>
         public static bool DisplayCounts {
             get { return Settings.GetValue("Counts", out bool counts) == false ? true : counts; }
             set { 
@@ -146,6 +179,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// Resets the universe to "factory" condition at current size.
+        /// </summary>
         public static void ResetUniverse() {
             bool widthed = Settings.GetValue("width", out int width);
             bool heighted = Settings.GetValue("height", out int height);

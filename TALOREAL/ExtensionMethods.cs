@@ -7,7 +7,7 @@ namespace TALOREAL {
 
         /// <summary>
         /// Splits a string by another string.
-        /// Emulates the .net Core method :)
+        /// Emulates the .net Core method. :)
         /// </summary>
         /// <param name="toSplit">The string to split.</param>
         /// <param name="delimiter">The string to split by.</param>
@@ -32,13 +32,13 @@ namespace TALOREAL {
         }
 
         /// <summary>
-        /// Creates 
+        /// Gets a subset array from another array.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
-        /// <param name="start"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of array.</typeparam>
+        /// <param name="arr">The original array.</param>
+        /// <param name="start">The starting index.</param>
+        /// <param name="count">The number of elements to copy.</param>
+        /// <returns>The subset array.</returns>
         public static T[] SubArray<T>(this T[] arr, int start, int count = -1) {
             start = (start < 0) ? 0 : start;
             count = (start + count >= arr.Length) ? arr.Length - start : count;
@@ -51,6 +51,12 @@ namespace TALOREAL {
             return objs.ToArray();
         }
 
+        /// <summary>
+        /// Attempts to parse a bool from a string.
+        /// </summary>
+        /// <param name="str">The string to parse.</param>
+        /// <param name="result">The resulting bool.</param>
+        /// <returns>Did the parsing work?</returns>
         public static bool TryParseBool(string str, out bool result) {
             result = false;
             if (string.IsNullOrEmpty(str)) { return false; }

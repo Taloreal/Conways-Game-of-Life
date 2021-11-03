@@ -15,9 +15,14 @@ namespace GameOfLife {
 
     public partial class Form1 : Form {
 
+        /// <summary>
+        /// Only generate the KnownColors list once by reusing the same form.
+        /// </summary>
         static frmCustomizeColors GetColors = new frmCustomizeColors();
 
-
+        /// <summary>
+        /// Creates a new window to play Game of Life in.
+        /// </summary>
         public Form1() {
             InitializeComponent();
             hudMenuItem.Checked = Config.DisplayHUD;
@@ -32,6 +37,10 @@ namespace GameOfLife {
             ForceRedraw(null, null);
         }
 
+        /// <summary>
+        /// Drawthe universe from a bitmap. (DEPRECATED: 11/03/2021)
+        /// </summary>
+        /// <param name="changedTo"></param>
         private void UniverseDrawn(object changedTo) {
             if ((changedTo is Bitmap) == false) { return; }
             Bitmap bmp = (Bitmap)changedTo;
@@ -40,12 +49,18 @@ namespace GameOfLife {
             gx.Dispose();
         }
 
+        /// <summary>
+        /// Redraw the universe when graphics panel is painted.
+        /// </summary>
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
             //UniverseDrawn(Config.Universe.Draw());
             Bitmap bmp = Config.Universe.DrawUniverse();
             e.Graphics.DrawImage(bmp, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
         }
 
+        /// <summary>
+        /// Toggle a cell if left click.
+        /// </summary>
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left) {
@@ -234,7 +249,7 @@ namespace GameOfLife {
         }
 
         /// <summary>
-        /// Force the graphics panel to redraw.
+        /// Force the graphics panel to redraw and display universe info.
         /// </summary>
         private void ForceRedraw(object sender, EventArgs e) {
             if (sender != null && sender is ToolStripMenuItem) {
@@ -263,6 +278,9 @@ namespace GameOfLife {
             //Config.Universe.DrawUniverse();
         }
 
+        /// <summary>
+        /// Prompt the user to change the random seed.
+        /// </summary>
         private void changeRandomizerSeedToolStripMenuItem_Click(object sender, EventArgs e) {
             PauseSim();
             frmNumberInput getSeed = new frmNumberInput("Change Seed",
@@ -273,11 +291,17 @@ namespace GameOfLife {
             ForceRedraw(null, null);
         }
 
+        /// <summary>
+        /// Set the random seed to current time.
+        /// </summary>
         private void setRandomizerSeedToTimeToolStripMenuItem_Click(object sender, EventArgs e) {
             Config.RandomSeed = (int)DateTime.Now.TimeOfDay.TotalMilliseconds;
             ForceRedraw(null, null);
         }
 
+        /// <summary>
+        /// Randomize the universe.
+        /// </summary>
         private void randomizeToolStripMenuItem_Click(object sender, EventArgs e) {
             PauseSim();
             Random rng = new Random(Config.RandomSeed);
@@ -289,6 +313,9 @@ namespace GameOfLife {
             Config.Universe.Generation = 0;
         }
 
+        /// <summary>
+        /// Prompt the user to resize the universe.
+        /// </summary>
         private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {
             PauseSim();
             frmGetNewSize resizer = new frmGetNewSize();
@@ -298,6 +325,9 @@ namespace GameOfLife {
             ForceRedraw(null, null);
         }
 
+        /// <summary>
+        /// Prompt the user to change the interval.
+        /// </summary>
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e) {
             PauseSim();
             frmNumberInput getInterval = new frmNumberInput("Change Interval",
@@ -308,6 +338,9 @@ namespace GameOfLife {
             ForceRedraw(null, null);
         }
 
+        /// <summary>
+        /// Prompt the user to change the GUI colors.
+        /// </summary>
         private void customizeToolStripMenuItem_Click(object sender, EventArgs e) {
             PauseSim();
             GetColors.ChooseColor(Config.GridColor, Config.ActiveColor, Config.InactiveColor);

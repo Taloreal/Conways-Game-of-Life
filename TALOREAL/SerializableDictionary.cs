@@ -3,13 +3,23 @@ using System.Xml.Serialization;
 
 namespace TALOREAL {
 
+    /// <summary>
+    /// A dictionary that can be saved as a XML file.
+    /// </summary>
     [XmlRoot("dictionary")] public class SerializableDictionary<TKey, TValue> :
         Dictionary<TKey, TValue>, IXmlSerializable {
 
         #region IXmlSerializable Members
 
+        /// <summary>
+        /// No XMLScheme info to be had.
+        /// </summary>
+        /// <returns>null</returns>
         public System.Xml.Schema.XmlSchema GetSchema() { return null; }
 
+        /// <summary>
+        /// Reads the dictionary's XML in.
+        /// </summary>
         public void ReadXml(System.Xml.XmlReader reader) {
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
@@ -31,6 +41,9 @@ namespace TALOREAL {
             reader.ReadEndElement();
         }
 
+        /// <summary>
+        /// Writes the dictionary to XML.
+        /// </summary>
         public void WriteXml(System.Xml.XmlWriter writer) {
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));

@@ -13,6 +13,10 @@ namespace GameOfLife {
     public class Universe {
 
         public int _Generation = 0;
+
+        /// <summary>
+        /// The current generation number.
+        /// </summary>
         public int Generation { 
             get { return _Generation; } 
             set {
@@ -21,16 +25,28 @@ namespace GameOfLife {
             } 
         }
 
+        //the default size
         public const int DefaultWidth = 30;
         public const int DefaultHeight = 30;
 
         private bool[,] universe = new bool[DefaultWidth, DefaultHeight];
+
+        /// <summary>
+        /// The universe's current width.
+        /// </summary>
         public int Width => universe.GetLength(0);
+
+        /// <summary>
+        /// The universe's current height.
+        /// </summary>
         public int Height => universe.GetLength(1);
 
         public event EventHandler ForceRedraw;
         public event PropertyChanged SizeChanged;
 
+        /// <summary>
+        /// The size of the universe.
+        /// </summary>
         public Size Size {
             get {
                 bool widthed = Settings.GetValue("width", out int width);
@@ -56,6 +72,9 @@ namespace GameOfLife {
             }
         }
 
+        /// <summary>
+        /// Calculate the next generation of the universe when timer ticks.
+        /// </summary>
         public void Timer_Tick(object sender, EventArgs e) {
             NextGeneration();
         }
@@ -84,7 +103,9 @@ namespace GameOfLife {
             ForceRedraw?.Invoke(null, null);
         }
 
-        // Calculate the next generation of cells
+        /// <summary>
+        /// Calculate the next generation of cells.
+        /// </summary>
         private void NextGeneration() {
             bool[,] next = new bool[Width, Height];
             for (int x = 0; x < Width; x++) {
@@ -161,6 +182,10 @@ namespace GameOfLife {
             return ((neighborsOn == 3) || (active && neighborsOn > 1 && neighborsOn < 4));
         }
 
+        /// <summary>
+        /// Draws the HUD.
+        /// </summary>
+        /// <returns>A bitmap drawing of the HUD.</returns>
         public Bitmap DrawHUD() {
             Bitmap bmp = new Bitmap(350, 200);
             Graphics gx = Graphics.FromImage(bmp);
@@ -180,6 +205,10 @@ namespace GameOfLife {
             return bmp;
         }
 
+        /// <summary>
+        /// Draws the universe.
+        /// </summary>
+        /// <returns>A bitmap drawing of the universe.</returns>
         public Bitmap DrawUniverse() {
             int cellWidth = 30, cellHeight = 30;
             Bitmap bmp = new Bitmap(cellWidth * Width, cellHeight * Height);
@@ -236,6 +265,11 @@ namespace GameOfLife {
             return bmp;
         }
 
+        /// <summary>
+        /// Toggles a cell's state.
+        /// </summary>
+        /// <param name="x">The x position of the cell.</param>
+        /// <param name="y">The y position of the cell.</param>
         public void ToggleCell(int x, int y) {
             if (x < 0 || y < 0) { return; }
             if (x >= Width || y >= Height) { return; }
@@ -254,6 +288,10 @@ namespace GameOfLife {
             universe[x, y] = state;
         }
 
+        /// <summary>
+        /// Counts the number of "alive" cells.
+        /// </summary>
+        /// <returns>The number of "alive" cells.</returns>
         public int CountAlive() {
             int alive = 0;
             for (int x = 0; x < Width; x++) {
