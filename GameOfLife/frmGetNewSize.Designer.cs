@@ -32,9 +32,11 @@ namespace GameOfLife
             this.okBtn = new System.Windows.Forms.Button();
             this.cancelBtn = new System.Windows.Forms.Button();
             this.widthLbl = new System.Windows.Forms.Label();
-            this.heightTbx = new System.Windows.Forms.TextBox();
             this.heightLbl = new System.Windows.Forms.Label();
-            this.widthTbx = new System.Windows.Forms.TextBox();
+            this.widthTbx = new System.Windows.Forms.NumericUpDown();
+            this.heightTbx = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.widthTbx)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightTbx)).BeginInit();
             this.SuspendLayout();
             // 
             // okBtn
@@ -66,13 +68,6 @@ namespace GameOfLife
             this.widthLbl.TabIndex = 2;
             this.widthLbl.Text = "Width:";
             // 
-            // heightTbx
-            // 
-            this.heightTbx.Location = new System.Drawing.Point(93, 25);
-            this.heightTbx.Name = "heightTbx";
-            this.heightTbx.Size = new System.Drawing.Size(75, 20);
-            this.heightTbx.TabIndex = 3;
-            // 
             // heightLbl
             // 
             this.heightLbl.AutoSize = true;
@@ -85,9 +80,48 @@ namespace GameOfLife
             // widthTbx
             // 
             this.widthTbx.Location = new System.Drawing.Point(12, 25);
+            this.widthTbx.Margin = new System.Windows.Forms.Padding(2);
+            this.widthTbx.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.widthTbx.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.widthTbx.Name = "widthTbx";
             this.widthTbx.Size = new System.Drawing.Size(75, 20);
-            this.widthTbx.TabIndex = 5;
+            this.widthTbx.TabIndex = 6;
+            this.widthTbx.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // heightTbx
+            // 
+            this.heightTbx.Location = new System.Drawing.Point(93, 25);
+            this.heightTbx.Margin = new System.Windows.Forms.Padding(2);
+            this.heightTbx.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.heightTbx.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.heightTbx.Name = "heightTbx";
+            this.heightTbx.Size = new System.Drawing.Size(75, 20);
+            this.heightTbx.TabIndex = 7;
+            this.heightTbx.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             // 
             // frmGetNewSize
             // 
@@ -95,14 +129,18 @@ namespace GameOfLife
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(180, 83);
             this.ControlBox = false;
+            this.Controls.Add(this.heightTbx);
             this.Controls.Add(this.widthTbx);
             this.Controls.Add(this.heightLbl);
-            this.Controls.Add(this.heightTbx);
             this.Controls.Add(this.widthLbl);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.okBtn);
+            this.MaximumSize = new System.Drawing.Size(196, 122);
+            this.MinimumSize = new System.Drawing.Size(196, 122);
             this.Name = "frmGetNewSize";
             this.Text = "Resize Universe";
+            ((System.ComponentModel.ISupportInitialize)(this.widthTbx)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.heightTbx)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -113,8 +151,8 @@ namespace GameOfLife
         private System.Windows.Forms.Button okBtn;
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.Label widthLbl;
-        private System.Windows.Forms.TextBox heightTbx;
         private System.Windows.Forms.Label heightLbl;
-        private System.Windows.Forms.TextBox widthTbx;
+        private System.Windows.Forms.NumericUpDown widthTbx;
+        private System.Windows.Forms.NumericUpDown heightTbx;
     }
 }

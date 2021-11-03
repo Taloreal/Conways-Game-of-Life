@@ -43,39 +43,35 @@ namespace GameOfLife
             // grdClrLbl
             // 
             this.grdClrLbl.AutoSize = true;
-            this.grdClrLbl.Location = new System.Drawing.Point(16, 11);
-            this.grdClrLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.grdClrLbl.Location = new System.Drawing.Point(12, 9);
             this.grdClrLbl.Name = "grdClrLbl";
-            this.grdClrLbl.Size = new System.Drawing.Size(80, 17);
+            this.grdClrLbl.Size = new System.Drawing.Size(59, 13);
             this.grdClrLbl.TabIndex = 0;
             this.grdClrLbl.Text = "Grid Color: ";
             // 
             // activeClrLbl
             // 
             this.activeClrLbl.AutoSize = true;
-            this.activeClrLbl.Location = new System.Drawing.Point(16, 59);
-            this.activeClrLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.activeClrLbl.Location = new System.Drawing.Point(12, 48);
             this.activeClrLbl.Name = "activeClrLbl";
-            this.activeClrLbl.Size = new System.Drawing.Size(91, 17);
+            this.activeClrLbl.Size = new System.Drawing.Size(70, 13);
             this.activeClrLbl.TabIndex = 1;
             this.activeClrLbl.Text = "Active Color: ";
             // 
             // inactiveClrLbl
             // 
             this.inactiveClrLbl.AutoSize = true;
-            this.inactiveClrLbl.Location = new System.Drawing.Point(16, 107);
-            this.inactiveClrLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.inactiveClrLbl.Location = new System.Drawing.Point(12, 87);
             this.inactiveClrLbl.Name = "inactiveClrLbl";
-            this.inactiveClrLbl.Size = new System.Drawing.Size(101, 17);
+            this.inactiveClrLbl.Size = new System.Drawing.Size(78, 13);
             this.inactiveClrLbl.TabIndex = 2;
             this.inactiveClrLbl.Text = "Inactive Color: ";
             // 
             // cancelBtn
             // 
-            this.cancelBtn.Location = new System.Drawing.Point(99, 159);
-            this.cancelBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.cancelBtn.Location = new System.Drawing.Point(74, 129);
             this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(77, 28);
+            this.cancelBtn.Size = new System.Drawing.Size(58, 23);
             this.cancelBtn.TabIndex = 7;
             this.cancelBtn.Text = "Cancel";
             this.cancelBtn.UseVisualStyleBackColor = true;
@@ -83,10 +79,9 @@ namespace GameOfLife
             // 
             // okBtn
             // 
-            this.okBtn.Location = new System.Drawing.Point(16, 159);
-            this.okBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.okBtn.Location = new System.Drawing.Point(12, 129);
             this.okBtn.Name = "okBtn";
-            this.okBtn.Size = new System.Drawing.Size(77, 28);
+            this.okBtn.Size = new System.Drawing.Size(58, 23);
             this.okBtn.TabIndex = 6;
             this.okBtn.Text = "Ok";
             this.okBtn.UseVisualStyleBackColor = true;
@@ -95,38 +90,35 @@ namespace GameOfLife
             // gridCB
             // 
             this.gridCB.FormattingEnabled = true;
-            this.gridCB.Location = new System.Drawing.Point(16, 31);
-            this.gridCB.Margin = new System.Windows.Forms.Padding(4);
+            this.gridCB.Location = new System.Drawing.Point(12, 25);
             this.gridCB.Name = "gridCB";
-            this.gridCB.Size = new System.Drawing.Size(159, 24);
+            this.gridCB.Size = new System.Drawing.Size(120, 21);
             this.gridCB.TabIndex = 8;
             this.gridCB.SelectedIndexChanged += new System.EventHandler(this.gridDUD_SelectedItemChanged);
             // 
             // activeCB
             // 
             this.activeCB.FormattingEnabled = true;
-            this.activeCB.Location = new System.Drawing.Point(16, 79);
-            this.activeCB.Margin = new System.Windows.Forms.Padding(4);
+            this.activeCB.Location = new System.Drawing.Point(12, 64);
             this.activeCB.Name = "activeCB";
-            this.activeCB.Size = new System.Drawing.Size(159, 24);
+            this.activeCB.Size = new System.Drawing.Size(120, 21);
             this.activeCB.TabIndex = 9;
             this.activeCB.SelectedIndexChanged += new System.EventHandler(this.activeDUD_SelectedItemChanged);
             // 
             // inactiveCB
             // 
             this.inactiveCB.FormattingEnabled = true;
-            this.inactiveCB.Location = new System.Drawing.Point(16, 126);
-            this.inactiveCB.Margin = new System.Windows.Forms.Padding(4);
+            this.inactiveCB.Location = new System.Drawing.Point(12, 102);
             this.inactiveCB.Name = "inactiveCB";
-            this.inactiveCB.Size = new System.Drawing.Size(159, 24);
+            this.inactiveCB.Size = new System.Drawing.Size(120, 21);
             this.inactiveCB.TabIndex = 10;
             this.inactiveCB.SelectedIndexChanged += new System.EventHandler(this.inactiveDUD_SelectedItemChanged);
             // 
             // frmCustomizeColors
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(189, 199);
+            this.ClientSize = new System.Drawing.Size(142, 162);
             this.ControlBox = false;
             this.Controls.Add(this.inactiveCB);
             this.Controls.Add(this.activeCB);
@@ -136,7 +128,8 @@ namespace GameOfLife
             this.Controls.Add(this.inactiveClrLbl);
             this.Controls.Add(this.activeClrLbl);
             this.Controls.Add(this.grdClrLbl);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximumSize = new System.Drawing.Size(158, 201);
+            this.MinimumSize = new System.Drawing.Size(158, 201);
             this.Name = "frmCustomizeColors";
             this.Text = "Change Colors";
             this.ResumeLayout(false);

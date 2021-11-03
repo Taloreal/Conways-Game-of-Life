@@ -33,9 +33,9 @@ namespace GameOfLife {
         /// Closes the dialogue box with the OK state.
         /// </summary>
         private void okBtn_Click(object sender, EventArgs e) {
-            bool widthed = int.TryParse(widthTbx.Text, out int width);
-            bool heighted = int.TryParse(heightTbx.Text, out int height);
-            if (widthed == false || heighted == false || width < 1 || height < 1) {
+            int width = (int)widthTbx.Value;
+            int height = (int)heightTbx.Value;
+            if (width < 1 || height < 1) {
                 MessageBox.Show("Must enter positive integers!");
                 return;
             }

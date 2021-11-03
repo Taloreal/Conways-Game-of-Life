@@ -30,9 +30,10 @@ namespace GameOfLife
         private void InitializeComponent()
         {
             this.promptLbl = new System.Windows.Forms.Label();
-            this.inputTbx = new System.Windows.Forms.TextBox();
             this.cancelBtn = new System.Windows.Forms.Button();
             this.okBtn = new System.Windows.Forms.Button();
+            this.inputTbx = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.inputTbx)).BeginInit();
             this.SuspendLayout();
             // 
             // promptLbl
@@ -43,13 +44,6 @@ namespace GameOfLife
             this.promptLbl.Size = new System.Drawing.Size(39, 13);
             this.promptLbl.TabIndex = 0;
             this.promptLbl.Text = "prompt";
-            // 
-            // inputTbx
-            // 
-            this.inputTbx.Location = new System.Drawing.Point(12, 25);
-            this.inputTbx.Name = "inputTbx";
-            this.inputTbx.Size = new System.Drawing.Size(100, 20);
-            this.inputTbx.TabIndex = 1;
             // 
             // cancelBtn
             // 
@@ -71,18 +65,38 @@ namespace GameOfLife
             this.okBtn.UseVisualStyleBackColor = true;
             this.okBtn.Click += new System.EventHandler(this.okBtn_Click);
             // 
+            // inputTbx
+            // 
+            this.inputTbx.Location = new System.Drawing.Point(12, 25);
+            this.inputTbx.Maximum = new decimal(new int[] {
+            2000000000,
+            0,
+            0,
+            0});
+            this.inputTbx.Minimum = new decimal(new int[] {
+            2000000000,
+            0,
+            0,
+            -2147483648});
+            this.inputTbx.Name = "inputTbx";
+            this.inputTbx.Size = new System.Drawing.Size(100, 20);
+            this.inputTbx.TabIndex = 4;
+            // 
             // frmNumberInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(129, 88);
             this.ControlBox = false;
+            this.Controls.Add(this.inputTbx);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.okBtn);
-            this.Controls.Add(this.inputTbx);
             this.Controls.Add(this.promptLbl);
+            this.MaximumSize = new System.Drawing.Size(145, 127);
+            this.MinimumSize = new System.Drawing.Size(145, 127);
             this.Name = "frmNumberInput";
             this.Text = "frmNumberInput";
+            ((System.ComponentModel.ISupportInitialize)(this.inputTbx)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -91,8 +105,8 @@ namespace GameOfLife
         #endregion
 
         private System.Windows.Forms.Label promptLbl;
-        private System.Windows.Forms.TextBox inputTbx;
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.Button okBtn;
+        private System.Windows.Forms.NumericUpDown inputTbx;
     }
 }

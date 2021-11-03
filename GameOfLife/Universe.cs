@@ -80,7 +80,7 @@ namespace GameOfLife {
         }
 
         /// <summary>
-        /// Gets the boundary type for the universe, either Toroidal or Finite.
+        /// Gets the boundary type for the universe, either Toroidal (true) or Finite (false).
         /// </summary>
         /// <param name="menuState">Is the current menu set to toroidal?</param>
         /// <returns>The boundary type currently in use.</returns>
@@ -190,8 +190,10 @@ namespace GameOfLife {
             Bitmap bmp = new Bitmap(350, 200);
             Graphics gx = Graphics.FromImage(bmp);
             Font drawFont = new Font(FontFamily.GenericSansSerif, 13f);
-            Brush drawBrush = new SolidBrush(Color.FromKnownColor(
-                KnownColor.Red));
+            //Brush drawBrush = new SolidBrush(Color.FromKnownColor(
+            //    KnownColor.Red));
+            Brush drawBrush = new SolidBrush(Color.FromArgb(160, 
+                Color.FromKnownColor(KnownColor.Red)));
             gx.DrawString("Generation: " + Generation, drawFont, 
                 drawBrush, new Point(10, 135));
             gx.DrawString("Cell Count: " + CountAlive(), drawFont,
