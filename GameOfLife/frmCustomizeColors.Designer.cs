@@ -73,7 +73,7 @@ namespace GameOfLife
             // cancelBtn
             // 
             this.cancelBtn.Location = new System.Drawing.Point(99, 159);
-            this.cancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cancelBtn.Margin = new System.Windows.Forms.Padding(4);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(77, 28);
             this.cancelBtn.TabIndex = 7;
@@ -84,7 +84,7 @@ namespace GameOfLife
             // okBtn
             // 
             this.okBtn.Location = new System.Drawing.Point(16, 159);
-            this.okBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.okBtn.Margin = new System.Windows.Forms.Padding(4);
             this.okBtn.Name = "okBtn";
             this.okBtn.Size = new System.Drawing.Size(77, 28);
             this.okBtn.TabIndex = 6;
@@ -96,28 +96,31 @@ namespace GameOfLife
             // 
             this.gridCB.FormattingEnabled = true;
             this.gridCB.Location = new System.Drawing.Point(16, 31);
-            this.gridCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridCB.Margin = new System.Windows.Forms.Padding(4);
             this.gridCB.Name = "gridCB";
             this.gridCB.Size = new System.Drawing.Size(159, 24);
             this.gridCB.TabIndex = 8;
+            this.gridCB.SelectedIndexChanged += new System.EventHandler(this.gridDUD_SelectedItemChanged);
             // 
             // activeCB
             // 
             this.activeCB.FormattingEnabled = true;
             this.activeCB.Location = new System.Drawing.Point(16, 79);
-            this.activeCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.activeCB.Margin = new System.Windows.Forms.Padding(4);
             this.activeCB.Name = "activeCB";
             this.activeCB.Size = new System.Drawing.Size(159, 24);
             this.activeCB.TabIndex = 9;
+            this.activeCB.SelectedIndexChanged += new System.EventHandler(this.activeDUD_SelectedItemChanged);
             // 
             // inactiveCB
             // 
             this.inactiveCB.FormattingEnabled = true;
             this.inactiveCB.Location = new System.Drawing.Point(16, 126);
-            this.inactiveCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.inactiveCB.Margin = new System.Windows.Forms.Padding(4);
             this.inactiveCB.Name = "inactiveCB";
             this.inactiveCB.Size = new System.Drawing.Size(159, 24);
             this.inactiveCB.TabIndex = 10;
+            this.inactiveCB.SelectedIndexChanged += new System.EventHandler(this.inactiveDUD_SelectedItemChanged);
             // 
             // frmCustomizeColors
             // 
@@ -133,7 +136,7 @@ namespace GameOfLife
             this.Controls.Add(this.inactiveClrLbl);
             this.Controls.Add(this.activeClrLbl);
             this.Controls.Add(this.grdClrLbl);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmCustomizeColors";
             this.Text = "Change Colors";
             this.ResumeLayout(false);

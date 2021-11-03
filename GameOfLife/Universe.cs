@@ -12,15 +12,24 @@ namespace GameOfLife {
 
     public class Universe {
 
-        public int Generation { get; private set; }
+        public int _Generation = 0;
+        public int Generation { 
+            get { return _Generation; } 
+            set {
+                _Generation = value;
+                ForceRedraw?.Invoke(_Generation, null);
+            } 
+        }
 
-        private bool[,] universe = new bool[30, 30];
+        public const int DefaultWidth = 30;
+        public const int DefaultHeight = 30;
+
+        private bool[,] universe = new bool[DefaultWidth, DefaultHeight];
         public int Width => universe.GetLength(0);
         public int Height => universe.GetLength(1);
 
+        public event EventHandler ForceRedraw;
         public event PropertyChanged SizeChanged;
-        public event PropertyChanged UniverseDrawn;
-        public event PropertyChanged BoundaryTypeChange;
 
         public Size Size {
             get {
@@ -43,13 +52,12 @@ namespace GameOfLife {
                     return;
                 }
                 UpdateUniverseSize(value);
-                DrawUniverse();
+                ForceRedraw?.Invoke(Size, null);
             }
         }
 
         public void Timer_Tick(object sender, EventArgs e) {
             NextGeneration();
-            DrawUniverse();
         }
 
         /// <summary>
@@ -61,10 +69,9 @@ namespace GameOfLife {
             bool fetched = Settings.GetValue("toroidal", out bool toroidal);
             if (!fetched) {
                 Settings.SetValue("toroidal", menuState);
-                BoundaryTypeChange?.Invoke(menuState);
                 toroidal = menuState;
+                ForceRedraw?.Invoke(null, null);
             }
-            else if (menuState != toroidal) { BoundaryTypeChange?.Invoke(toroidal); }
             return toroidal;
         }
 
@@ -74,8 +81,7 @@ namespace GameOfLife {
         /// <param name="changeTo">What to change it to?</param>
         public void SetBoundaryType(bool changeTo) {
             Settings.SetValue("toroidal", changeTo);
-            BoundaryTypeChange?.Invoke(changeTo);
-            DrawUniverse();
+            ForceRedraw?.Invoke(null, null);
         }
 
         // Calculate the next generation of cells
@@ -154,56 +160,6 @@ namespace GameOfLife {
         private bool GetNextGenerationState(bool active, int neighborsOn) {
             return ((neighborsOn == 3) || (active && neighborsOn > 1 && neighborsOn < 4));
         }
-
-        public void DrawUniverse() {
-            int cellWidth = 30, cellHeight = 30;
-            Bitmap bmp = new Bitmap(cellWidth * Width, cellHeight * Height);
-            Graphics gx = Graphics.FromImage(bmp);
-
-            // A Pen for drawing the grid lines (color, width)
-            Pen gridPen = new Pen(Color.FromKnownColor(Config.GridColor), 1);
-            Font drawFont = new Font(FontFamily.GenericSansSerif, cellWidth / 4.0f);
-            Brush gridBrush = new SolidBrush(Color.FromKnownColor(Config.GridColor));
-
-            // A Brush for filling living cells interiors (color)
-            Brush liveBrush = new SolidBrush(Color.FromKnownColor(Config.ActiveColor));
-            Brush deadBrush = new SolidBrush(Color.FromKnownColor(Config.InactiveColor));
-
-            // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < Height; y++) {
-                // Iterate through the universe in the x, left to right
-                for (int x = 0; x < Width; x++) {
-                    // A rectangle to represent each cell in pixels
-                    Rectangle cellRect = Rectangle.Empty;
-                    cellRect.X = x * cellWidth;
-                    cellRect.Y = y * cellHeight;
-                    cellRect.Width = cellWidth;
-                    cellRect.Height = cellHeight;
-
-                    // Fill the cell with alive or dead brush.
-                    gx.FillRectangle(universe[x, y] == true ?
-                        liveBrush : deadBrush, cellRect);
-                    int neighborsOn = GetNeighborsActive(x, y);
-                    if (neighborsOn > 0 && Config.DisplayCounts) {
-                        gx.DrawString(neighborsOn.ToString(),
-                            drawFont, gridBrush, cellRect);
-                    }
-
-                    // Outline the cell with a pen
-                    if (Config.DisplayGrid) {
-                        gx.DrawRectangle(gridPen, cellRect.X, cellRect.Y, 
-                            cellRect.Width, cellRect.Height);
-                    }
-                }
-            }
-            // Cleaning up pens and brushes
-            liveBrush.Dispose();
-            deadBrush.Dispose();
-            gridBrush.Dispose();
-            gridPen.Dispose();
-            UniverseDrawn?.Invoke(bmp);
-        }
-
 
         public Bitmap Draw() {
             int cellWidth = 30, cellHeight = 30;

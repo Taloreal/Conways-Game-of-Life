@@ -25,7 +25,8 @@ namespace GameOfLife {
             countsMenuItem.Checked = Config.DisplayCounts;
             toroidalMenuItem.Checked = Config.Universe.GetBoundaryType(false);
 
-            Config.Universe.UniverseDrawn += UniverseDrawn;
+            Config.ForceRedraw += ForceRedraw;
+            Config.Universe.ForceRedraw += ForceRedraw;
 
             ToggleSpeedButtons();
             ForceRedraw(null, null);
@@ -39,9 +40,10 @@ namespace GameOfLife {
             gx.Dispose();
         }
 
-
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e) {
-            UniverseDrawn(Config.Universe.Draw());
+            //UniverseDrawn(Config.Universe.Draw());
+            Bitmap bmp = Config.Universe.Draw();
+            e.Graphics.DrawImage(bmp, 0, 0, graphicsPanel1.Width, graphicsPanel1.Height);
         }
 
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e) {
@@ -163,7 +165,6 @@ namespace GameOfLife {
             Config.GridColor = KnownColor.Black;
             Config.InactiveColor = KnownColor.White;
             Config.ActiveColor = KnownColor.Gray;
-            ForceRedraw(null, null);
         }
 
         /// <summary>
@@ -229,8 +230,8 @@ namespace GameOfLife {
                         Config.Universe.SetCell(x, y, rows[y][x] == 'O');
                     }
                 }
+                Config.Universe.Generation = 0;
             }
-            ForceRedraw(null, null);
         }
 
         /// <summary>
@@ -240,16 +241,27 @@ namespace GameOfLife {
             if (sender != null && sender is ToolStripMenuItem) {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
                 item.Checked = !item.Checked;
-                if (item.Name.ToLower().Contains("hud")) { Config.DisplayHUD = item.Checked; }
-                if (item.Name.ToLower().Contains("grid")) { Config.DisplayGrid = item.Checked; }
-                if (item.Name.ToLower().Contains("count")) { Config.DisplayCounts = item.Checked; }
+                if (item.Name.ToLower().Contains("hud")) { 
+                    Config.DisplayHUD = item.Checked; 
+                }
+                if (item.Name.ToLower().Contains("grid")) { 
+                    Config.DisplayGrid = item.Checked; 
+                }
+                if (item.Name.ToLower().Contains("count")) { 
+                    Config.DisplayCounts = item.Checked; 
+                }
             }
+            hudMenuItem.Checked = Config.DisplayHUD;
+            gridMenuItem.Checked = Config.DisplayGrid;
+            countsMenuItem.Checked = Config.DisplayCounts;
+            toroidalMenuItem.Checked = Config.Universe.GetBoundaryType(false);
             toolStripStatusAlive.Text = "Alive = " + GetAllAlive() + ", ";
             toolStripStatusSeed.Text = "Random Seed = " + Config.RandomSeed + ", ";
             toolStripStatusLabelInterval.Text = "Interval = " + Config.Interval + " ms, ";
             toolStripStatusLabelGenerations.Text = "Generations = " + 
                 Config.Universe.Generation.ToString() + ", ";
-            Config.Universe.DrawUniverse();
+            graphicsPanel1.Invalidate();
+            //Config.Universe.DrawUniverse();
         }
 
         private void changeRandomizerSeedToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -268,13 +280,14 @@ namespace GameOfLife {
         }
 
         private void randomizeToolStripMenuItem_Click(object sender, EventArgs e) {
+            PauseSim();
             Random rng = new Random(Config.RandomSeed);
             for (int x = 0; x < Config.Universe.Width; x++) {
                 for (int y = 0; y < Config.Universe.Height; y++) {
                     Config.Universe.SetCell(x, y, rng.Next(0, 100) % 2 == 1);
                 }
             }
-            ForceRedraw(null, null);
+            Config.Universe.Generation = 0;
         }
 
         private void resizeToolStripMenuItem_Click(object sender, EventArgs e) {

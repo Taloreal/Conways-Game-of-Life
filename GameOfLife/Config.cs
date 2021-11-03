@@ -18,7 +18,7 @@ namespace GameOfLife {
         public const int MinSpeed = 100, MaxSpeed = 1000;
         public static Universe Universe = new Universe();
 
-        public static event PropertyChanged IntervalChanged;
+        public static event EventHandler ForceRedraw;
 
         static Config() {
             Timer.Interval = 300;
@@ -30,12 +30,18 @@ namespace GameOfLife {
 
         public static bool Running {
             get { return Timer.Enabled; } 
-            set { Timer.Enabled = value; } 
+            set { 
+                Timer.Enabled = value;
+                ForceRedraw?.Invoke(null, null);
+            } 
         }
 
         public static Size UniverseSize {
             get { return Universe.Size; }
-            set { Universe.Size = value; }
+            set { 
+                Universe.Size = value;
+                ForceRedraw?.Invoke(null, null);
+            }
         }
 
         public static KnownColor GridColor {
@@ -47,7 +53,7 @@ namespace GameOfLife {
             }
             set { 
                 Settings.SetValue("gridClr", (int)value);
-                Universe.DrawUniverse();
+                ForceRedraw?.Invoke(null, null);
             }
         }
 
@@ -60,7 +66,7 @@ namespace GameOfLife {
             }
             set { 
                 Settings.SetValue("inactiveClr", (int)value);
-                Universe.DrawUniverse();
+                ForceRedraw?.Invoke(null, null);
             }
         }
 
@@ -73,29 +79,31 @@ namespace GameOfLife {
             }
             set { 
                 Settings.SetValue("activeClr", (int)value);
-                Universe.DrawUniverse();
+                ForceRedraw?.Invoke(null, null);
             }
         }
+
         public static int Interval {
             get {
                 if (!Settings.GetValue("interval", out int val)) {
                     val = Timer.Interval;
-                    IntervalChanged?.Invoke(val);
+                    Settings.SetValue("interval", val);
+                    ForceRedraw?.Invoke(null, null);
                 }
                 else if (val != Timer.Interval) {
                     val = (val > MaxSpeed ? MaxSpeed : val) < MinSpeed ? MinSpeed : val;
-                    Settings.SetValue("interval", val);
                     Timer.Interval = val;
-                    IntervalChanged?.Invoke(val);
+                    Settings.SetValue("interval", val);
+                    ForceRedraw?.Invoke(null, null);
                 }
                 return val;
             }
             set {
                 //limit the interval to between minSpeed (100) and maxSpeed (1000).
                 value = (value > MaxSpeed ? MaxSpeed : value) < MinSpeed ? MinSpeed : value;
-                Settings.SetValue("interval", value);
                 Timer.Interval = value;
-                IntervalChanged?.Invoke(value);
+                Settings.SetValue("interval", value);
+                ForceRedraw?.Invoke(null, null);
             }
         }
 
@@ -106,31 +114,47 @@ namespace GameOfLife {
                 }
                 return val;
             }
-            set { Settings.SetValue("seed", value); }
+            set { 
+                Settings.SetValue("seed", value);
+                ForceRedraw?.Invoke(null, null);
+            }
         }
 
         public static bool DisplayHUD {
             get { return Settings.GetValue("HUD", out bool HUD) == false ? true : HUD; }
-            set { Settings.SetValue("HUD", value); Universe.DrawUniverse(); }
+            set { 
+                Settings.SetValue("HUD", value);
+                ForceRedraw?.Invoke(null, null);
+            }
         }
 
         public static bool DisplayGrid {
             get { return Settings.GetValue("Grid", out bool grid) == false ? true : grid; }
-            set { Settings.SetValue("Grid", value); Universe.DrawUniverse(); }
+            set { 
+                Settings.SetValue("Grid", value);
+                ForceRedraw?.Invoke(null, null);
+            }
         }
 
         public static bool DisplayCounts {
             get { return Settings.GetValue("Counts", out bool counts) == false ? true : counts; }
-            set { Settings.SetValue("Counts", value); Universe.DrawUniverse(); }
+            set { 
+                Settings.SetValue("Counts", value);
+                ForceRedraw?.Invoke(null, null);
+            }
         }
 
         public static void ResetUniverse() {
-            Universe = new Universe();
-            Size uSize = Universe.Size;
             bool widthed = Settings.GetValue("width", out int width);
             bool heighted = Settings.GetValue("height", out int height);
             UniverseSize = (widthed && heighted) ? new Size(width, height) :
-                 new Size(Universe.Width, Universe.Height);
+                 new Size(Universe.DefaultWidth, Universe.DefaultHeight);
+            for (int x = 0; x < Universe.Width; x++) {
+                for (int y = 0; y < Universe.Height; y++) {
+                    Universe.SetCell(x, y, false);
+                }
+            }
+            Universe.Generation = 0;
         }
 
     }
