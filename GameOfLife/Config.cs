@@ -14,8 +14,10 @@ namespace GameOfLife {
 
     public static class Config {
 
-        private static Timer Timer = new Timer();
         public const int MinSpeed = 1, MaxSpeed = 1000;
+
+        private static Timer Timer = new Timer();
+        public static RuleSet Rules = new RuleSet();
         public static Universe Universe = new Universe();
 
         public static event EventHandler ForceRedraw;

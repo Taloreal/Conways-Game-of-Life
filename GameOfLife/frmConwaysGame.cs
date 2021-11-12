@@ -410,5 +410,15 @@ namespace GameOfLife {
             }
             ForceRedraw(null, null);
         }
+
+        /// <summary>
+        /// Displays a dialogue box offering to the user to change the rules.
+        /// </summary>
+        private void changeEvolutionRulesToolStripMenuItem_Click(object sender, EventArgs e) {
+            frmGetRuleSet rules = new frmGetRuleSet();
+            if (rules.ShowDialog() == DialogResult.OK) {
+                ForceRedraw(null, null);
+            }
+        }
     }
 }

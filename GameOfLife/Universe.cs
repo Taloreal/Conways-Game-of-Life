@@ -188,8 +188,8 @@ namespace GameOfLife {
         /// <param name="active">Is it currently on or off?</param>
         /// <param name="neighborsOn">How many neighbors are active right now?</param>
         /// <returns>The new state for the cell.</returns>
-        private bool GetNextGenerationState(bool active, int neighborsOn) {
-            return ((neighborsOn == 3) || (active && neighborsOn > 1 && neighborsOn < 4));
+        public static bool GetNextGenerationState(bool active, int neighborsOn) {
+            return Config.Rules.RollTheDice(active, neighborsOn);
         }
 
         /// <summary>
