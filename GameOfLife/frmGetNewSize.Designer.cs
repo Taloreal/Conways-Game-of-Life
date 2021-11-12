@@ -138,6 +138,7 @@ namespace GameOfLife
             this.MaximumSize = new System.Drawing.Size(196, 122);
             this.MinimumSize = new System.Drawing.Size(196, 122);
             this.Name = "frmGetNewSize";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Resize Universe";
             ((System.ComponentModel.ISupportInitialize)(this.widthTbx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.heightTbx)).EndInit();

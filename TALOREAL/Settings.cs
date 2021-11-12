@@ -91,10 +91,6 @@ namespace TALOREAL {
                     Database = (SerializableDictionary<string, string>)
                         serializer.Deserialize(reader);
                     reader.Close();
-                    if (File.Exists("Backup.TAL")) { 
-                        File.Delete("Backup.TAL"); 
-                    }
-                    File.Copy("Settings.TAL", "Backup.TAL");
                     return true;
                 }
                 catch { reader.Close(); return false; }

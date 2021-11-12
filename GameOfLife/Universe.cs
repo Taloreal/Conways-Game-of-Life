@@ -12,7 +12,7 @@ namespace GameOfLife {
 
     public class Universe {
 
-        public int _Generation = 0;
+        private int _Generation = 0;
 
         /// <summary>
         /// The current generation number.
@@ -107,17 +107,27 @@ namespace GameOfLife {
         /// Calculate the next generation of cells.
         /// </summary>
         public void NextGeneration() {
+            bool same = true;
             bool[,] next = new bool[Width, Height];
             for (int x = 0; x < Width; x++) {
                 for (int y = 0; y < Height; y++) {
                     int actives = GetNeighborsActive(x, y);
                     next[x, y] = GetNextGenerationState(GetState(x, y), actives);
+                    if (same && next[x, y] != universe[x, y]) {
+                        same = false;
+                    }
                 }
             }
             universe = next;
-
             // Increment generation count
             Generation++;
+            int end = Config.RunTo;
+            if (same || Generation == end) {
+                if (Generation == end) {
+                    Config.RunTo = -1;
+                }
+                Config.Running = false; 
+            }
         }
 
         /// <summary>
@@ -183,28 +193,79 @@ namespace GameOfLife {
         }
 
         /// <summary>
+        /// Draws the number of active neighbors for the current cell.
+        /// </summary>
+        /// <param name="gx">The graphics object to draw on.</param>
+        /// <param name="drawFont">The font to draw in.</param>
+        /// <param name="gridBrush">The brush to draw with.</param>
+        /// <param name="rct">The rectangle to draw in.</param>
+        /// <param name="x">The x position of the cell.</param>
+        /// <param name="y">The y position of the cell.</param>
+        private void DrawCounts(Graphics gx, Font drawFont, Brush gridBrush, Rectangle rct, int x, int y) {
+            int count = GetNeighborsActive(x, y);
+            if (count > 0) {
+                gx.DrawString(count.ToString(),
+                    drawFont, gridBrush, rct);
+            }
+        }
+
+        /// <summary>
         /// Draws the HUD.
         /// </summary>
-        /// <returns>A bitmap drawing of the HUD.</returns>
-        public Bitmap DrawHUD() {
+        /// <param name="gx">The graphics object to draw on.</param>
+        /// <param name="imgSize">The size of the universe's image.</param>
+        private void DrawHUD(Graphics gx, Size imgSize) {
+            Rectangle hudRect = new Rectangle(
+                imgSize.Width / 200, imgSize.Height / 2,
+                imgSize.Width / 3, (imgSize.Height / 2) - 30);
             Bitmap bmp = new Bitmap(350, 200);
-            Graphics gx = Graphics.FromImage(bmp);
+            Graphics nestedGx = Graphics.FromImage(bmp);
             Font drawFont = new Font(FontFamily.GenericSansSerif, 13f);
-            //Brush drawBrush = new SolidBrush(Color.FromKnownColor(
-            //    KnownColor.Red));
-            Brush drawBrush = new SolidBrush(Color.FromArgb(160, 
+            Brush drawBrush = new SolidBrush(Color.FromArgb(160,
                 Color.FromKnownColor(KnownColor.Red)));
-            gx.DrawString("Generation: " + Generation, drawFont, 
+            nestedGx.DrawString("Generation: " + Generation, drawFont,
                 drawBrush, new Point(10, 135));
-            gx.DrawString("Cell Count: " + CountAlive(), drawFont,
+            nestedGx.DrawString("Cell Count: " + CountAlive(), drawFont,
                 drawBrush, new Point(10, 150));
             string bound = GetBoundaryType(false) ? "Toroidal" : "Finite";
-            gx.DrawString("Boundary Type: " + bound, drawFont,
+            nestedGx.DrawString("Boundary Type: " + bound, drawFont,
                 drawBrush, new Point(10, 165));
-            gx.DrawString("Universe Size: { Width = " + Width + ", Height = " + Height + " }", 
+            nestedGx.DrawString("Universe Size: { Width = " + Width + ", Height = " + Height + " }",
                 drawFont, drawBrush, new Point(10, 180));
-            gx.Dispose();
-            return bmp;
+            nestedGx.Dispose();
+            gx.DrawImage(bmp, hudRect);
+        }
+
+        /// <summary>
+        /// Draws the grid on the graphics object.
+        /// </summary>
+        /// <param name="gx">The graphics object to draw on.</param>
+        /// <param name="cellWidth">The width of each cell.</param>
+        /// <param name="cellHeight">The height of each cell.</param>
+        private void DrawGrid(Graphics gx, int cellWidth, int cellHeight) {
+            Rectangle cellRect = Rectangle.Empty;
+            Pen gridPen = new Pen(Color.FromKnownColor(Config.GridColor), 1);
+            Pen gridx10Pen = new Pen(Color.FromKnownColor(Config.Gridx10Color), 5);
+            //draw the normal grid
+            for (int x = 0; x < Width; x++) {
+                for (int y = 0; y < Height; y++) {
+                    cellRect.X = x * cellWidth; cellRect.Width = cellWidth; 
+                    cellRect.Y = y * cellHeight; cellRect.Height = cellHeight;
+                    gx.DrawRectangle(gridPen, cellRect.X, cellRect.Y,
+                        cellRect.Width, cellRect.Height);
+                }
+            }
+            //draw the x10 grid.
+            for (int x = 0; x < Width; x += 10) {
+                for (int y = 0; y < Height; y += 10) {
+                    cellRect.X = x * cellWidth; cellRect.Y = y * cellHeight;
+                    cellRect.Width = cellWidth * 10; cellRect.Height = cellHeight * 10;
+                    gx.DrawRectangle(gridx10Pen, cellRect.X, cellRect.Y,
+                        cellRect.Width, cellRect.Height);
+                }
+            }
+            gridx10Pen.Dispose();
+            gridPen.Dispose();
         }
 
         /// <summary>
@@ -217,8 +278,7 @@ namespace GameOfLife {
             Graphics gx = Graphics.FromImage(bmp);
 
             // A Pen for drawing the grid lines (color, width)
-            Pen gridPen = new Pen(Color.FromKnownColor(Config.GridColor), 1);
-            Font drawFont = new Font(FontFamily.GenericSansSerif, cellWidth / 4.0f);
+            Font drawFont = new Font(FontFamily.GenericSansSerif, cellWidth / 2.0f);
             Brush gridBrush = new SolidBrush(Color.FromKnownColor(Config.GridColor));
 
             // A Brush for filling living cells interiors (color)
@@ -231,38 +291,25 @@ namespace GameOfLife {
                 for (int x = 0; x < Width; x++) {
                     // A rectangle to represent each cell in pixels
                     Rectangle cellRect = Rectangle.Empty;
-                    cellRect.X = x * cellWidth;
-                    cellRect.Y = y * cellHeight;
-                    cellRect.Width = cellWidth;
-                    cellRect.Height = cellHeight;
+                    cellRect.X = x * cellWidth; cellRect.Width = cellWidth;
+                    cellRect.Y = y * cellHeight; cellRect.Height = cellHeight;
 
                     // Fill the cell with alive or dead brush.
                     gx.FillRectangle(universe[x, y] == true ?
                         liveBrush : deadBrush, cellRect);
-                    int neighborsOn = GetNeighborsActive(x, y);
-                    if (neighborsOn > 0 && Config.DisplayCounts) {
-                        gx.DrawString(neighborsOn.ToString(),
-                            drawFont, gridBrush, cellRect);
-                    }
-
-                    // Outline the cell with a pen
-                    if (Config.DisplayGrid) {
-                        gx.DrawRectangle(gridPen, cellRect.X, cellRect.Y,
-                            cellRect.Width, cellRect.Height);
+                    if (Config.DisplayCounts) { 
+                        DrawCounts(gx, drawFont, gridBrush, cellRect, x, y); 
                     }
                 }
             }
-            if (Config.DisplayHUD) {
-                Rectangle hudRect = new Rectangle(
-                    bmp.Width / 200, bmp.Height / 2,
-                    bmp.Width / 3, (bmp.Height / 2) - 30);
-                gx.DrawImage(DrawHUD(), hudRect);
-            }
+            if (Config.DisplayGrid) { DrawGrid(gx, cellWidth, cellHeight); }
+            if (Config.DisplayHUD) { DrawHUD(gx, bmp.Size); }
+
             // Cleaning up pens and brushes
             liveBrush.Dispose();
             deadBrush.Dispose();
             gridBrush.Dispose();
-            gridPen.Dispose();
+            drawFont.Dispose();
             gx.Dispose();
             return bmp;
         }

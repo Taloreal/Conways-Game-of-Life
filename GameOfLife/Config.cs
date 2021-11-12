@@ -43,6 +43,17 @@ namespace GameOfLife {
         }
 
         /// <summary>
+        /// Get or Set the generation number to stop at.
+        /// </summary>
+        public static int RunTo {
+            get {
+                bool worked = Settings.GetValue("runTo", out int value);
+                return worked ? value : -1;
+            }
+            set => Settings.SetValue("runTo", value);
+        }
+
+        /// <summary>
         /// The universe's size.
         /// </summary>
         public static Size UniverseSize {
@@ -65,6 +76,22 @@ namespace GameOfLife {
             }
             set { 
                 Settings.SetValue("gridClr", (int)value);
+                ForceRedraw?.Invoke(null, null);
+            }
+        }
+
+        /// <summary>
+        /// The color of the grid every 10 cells.
+        /// </summary>
+        public static KnownColor Gridx10Color {
+            get {
+                if (!Settings.GetValue("gridx10Clr", out int val)) {
+                    val = 35; // KnownColor.Black;
+                }
+                return (KnownColor)val;
+            }
+            set {
+                Settings.SetValue("gridx10Clr", (int)value);
                 ForceRedraw?.Invoke(null, null);
             }
         }

@@ -38,6 +38,8 @@ namespace GameOfLife
             this.activeCB = new System.Windows.Forms.ComboBox();
             this.inactiveCB = new System.Windows.Forms.ComboBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.gridx10CB = new System.Windows.Forms.ComboBox();
+            this.grdx10ClrLbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // grdClrLbl
@@ -61,7 +63,7 @@ namespace GameOfLife
             // inactiveClrLbl
             // 
             this.inactiveClrLbl.AutoSize = true;
-            this.inactiveClrLbl.Location = new System.Drawing.Point(12, 87);
+            this.inactiveClrLbl.Location = new System.Drawing.Point(139, 49);
             this.inactiveClrLbl.Name = "inactiveClrLbl";
             this.inactiveClrLbl.Size = new System.Drawing.Size(78, 13);
             this.inactiveClrLbl.TabIndex = 2;
@@ -69,7 +71,7 @@ namespace GameOfLife
             // 
             // cancelBtn
             // 
-            this.cancelBtn.Location = new System.Drawing.Point(74, 129);
+            this.cancelBtn.Location = new System.Drawing.Point(138, 91);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(58, 23);
             this.cancelBtn.TabIndex = 7;
@@ -79,7 +81,7 @@ namespace GameOfLife
             // 
             // okBtn
             // 
-            this.okBtn.Location = new System.Drawing.Point(12, 129);
+            this.okBtn.Location = new System.Drawing.Point(74, 91);
             this.okBtn.Name = "okBtn";
             this.okBtn.Size = new System.Drawing.Size(58, 23);
             this.okBtn.TabIndex = 6;
@@ -108,18 +110,38 @@ namespace GameOfLife
             // inactiveCB
             // 
             this.inactiveCB.FormattingEnabled = true;
-            this.inactiveCB.Location = new System.Drawing.Point(12, 102);
+            this.inactiveCB.Location = new System.Drawing.Point(139, 64);
             this.inactiveCB.Name = "inactiveCB";
             this.inactiveCB.Size = new System.Drawing.Size(120, 21);
             this.inactiveCB.TabIndex = 10;
             this.inactiveCB.SelectedIndexChanged += new System.EventHandler(this.inactiveDUD_SelectedItemChanged);
             // 
+            // gridx10CB
+            // 
+            this.gridx10CB.FormattingEnabled = true;
+            this.gridx10CB.Location = new System.Drawing.Point(139, 25);
+            this.gridx10CB.Name = "gridx10CB";
+            this.gridx10CB.Size = new System.Drawing.Size(120, 21);
+            this.gridx10CB.TabIndex = 12;
+            this.gridx10CB.SelectedIndexChanged += new System.EventHandler(this.gridx10DUD_SelectedItemChanged);
+            // 
+            // grdx10ClrLbl
+            // 
+            this.grdx10ClrLbl.AutoSize = true;
+            this.grdx10ClrLbl.Location = new System.Drawing.Point(139, 9);
+            this.grdx10ClrLbl.Name = "grdx10ClrLbl";
+            this.grdx10ClrLbl.Size = new System.Drawing.Size(79, 13);
+            this.grdx10ClrLbl.TabIndex = 11;
+            this.grdx10ClrLbl.Text = "Grid x10 Color: ";
+            // 
             // frmCustomizeColors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(142, 162);
+            this.ClientSize = new System.Drawing.Size(272, 122);
             this.ControlBox = false;
+            this.Controls.Add(this.gridx10CB);
+            this.Controls.Add(this.grdx10ClrLbl);
             this.Controls.Add(this.inactiveCB);
             this.Controls.Add(this.activeCB);
             this.Controls.Add(this.gridCB);
@@ -128,9 +150,9 @@ namespace GameOfLife
             this.Controls.Add(this.inactiveClrLbl);
             this.Controls.Add(this.activeClrLbl);
             this.Controls.Add(this.grdClrLbl);
-            this.MaximumSize = new System.Drawing.Size(158, 201);
-            this.MinimumSize = new System.Drawing.Size(158, 201);
+            this.MaximumSize = new System.Drawing.Size(1000, 1000);
             this.Name = "frmCustomizeColors";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change Colors";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -148,5 +170,7 @@ namespace GameOfLife
         private System.Windows.Forms.ComboBox activeCB;
         private System.Windows.Forms.ComboBox inactiveCB;
         private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.ComboBox gridx10CB;
+        private System.Windows.Forms.Label grdx10ClrLbl;
     }
 }

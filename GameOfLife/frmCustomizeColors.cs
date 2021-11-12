@@ -18,6 +18,11 @@ namespace GameOfLife {
         public KnownColor GridColor { get; private set; }
 
         /// <summary>
+        /// The grid x10's color.
+        /// </summary>
+        public KnownColor GridX10Color { get; private set; }
+
+        /// <summary>
         /// The active cells' color.
         /// </summary>
         public KnownColor ActiveColor { get; private set; }
@@ -41,11 +46,13 @@ namespace GameOfLife {
         /// <param name="grid">The grid color to show.</param>
         /// <param name="act">The active color to show.</param>
         /// <param name="inact">The inactive color to show.</param>
-        public void ChooseColor(KnownColor grid, KnownColor act, KnownColor inact) {
+        public void ChooseColor(KnownColor grid, KnownColor gridx10, KnownColor act, KnownColor inact) {
             GridColor = grid;
+            GridX10Color = gridx10;
             ActiveColor = act;
             InactiveColor = inact;
             gridCB.SelectedIndex = gridCB.Items.IndexOf(grid.ToString());
+            gridx10CB.SelectedIndex = gridx10CB.Items.IndexOf(gridx10.ToString());
             activeCB.SelectedIndex = activeCB.Items.IndexOf(act.ToString());
             inactiveCB.SelectedIndex = inactiveCB.Items.IndexOf(inact.ToString());
             this.ShowDialog();
@@ -61,6 +68,7 @@ namespace GameOfLife {
                 clrs.Add(clr.ToString());
             }
             gridCB.Items.AddRange(clrs.ToArray());
+            gridx10CB.Items.AddRange(clrs.ToArray());
             activeCB.Items.AddRange(clrs.ToArray());
             inactiveCB.Items.AddRange(clrs.ToArray());
         }
@@ -99,6 +107,13 @@ namespace GameOfLife {
         /// </summary>
         private void gridDUD_SelectedItemChanged(object sender, EventArgs e) {
             GridColor = StringToKnownColor((string)gridCB.SelectedItem, GridColor);
+        }
+
+        /// <summary>
+        /// Updates the user's choice of grid x10 color.
+        /// </summary>
+        private void gridx10DUD_SelectedItemChanged(object sender, EventArgs e) {
+            GridX10Color = StringToKnownColor((string)gridx10CB.SelectedItem, GridColor);
         }
 
         /// <summary>

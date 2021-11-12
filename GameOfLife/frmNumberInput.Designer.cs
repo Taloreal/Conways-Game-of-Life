@@ -95,6 +95,7 @@ namespace GameOfLife
             this.MaximumSize = new System.Drawing.Size(145, 127);
             this.MinimumSize = new System.Drawing.Size(145, 127);
             this.Name = "frmNumberInput";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmNumberInput";
             ((System.ComponentModel.ISupportInitialize)(this.inputTbx)).EndInit();
             this.ResumeLayout(false);
