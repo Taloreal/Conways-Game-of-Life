@@ -150,7 +150,8 @@ namespace GameOfLife
             this.Controls.Add(this.inactiveClrLbl);
             this.Controls.Add(this.activeClrLbl);
             this.Controls.Add(this.grdClrLbl);
-            this.MaximumSize = new System.Drawing.Size(1000, 1000);
+            this.MaximumSize = new System.Drawing.Size(288, 161);
+            this.MinimumSize = new System.Drawing.Size(288, 161);
             this.Name = "frmCustomizeColors";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change Colors";
