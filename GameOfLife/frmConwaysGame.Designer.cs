@@ -84,9 +84,10 @@ namespace GameOfLife
             this.gridContext = new System.Windows.Forms.ToolStripMenuItem();
             this.hudContext = new System.Windows.Forms.ToolStripMenuItem();
             this.countsContext = new System.Windows.Forms.ToolStripMenuItem();
-            this.graphicsPanel1 = new GameOfLife.GraphicsPanel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.changeEvolutionRulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.graphicsPanel1 = new GameOfLife.GraphicsPanel();
+            this.pauseWhenStableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -173,6 +174,7 @@ namespace GameOfLife
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.customizeToolStripMenuItem,
             this.optionsToolStripMenuItem,
+            this.pauseWhenStableToolStripMenuItem,
             this.toolStripSeparator3,
             this.changeEvolutionRulesToolStripMenuItem,
             this.toolStripSeparator2,
@@ -504,17 +506,6 @@ namespace GameOfLife
             this.countsContext.Text = "Display Neighbor Counts";
             this.countsContext.Click += new System.EventHandler(this.ChangeDisplayOption);
             // 
-            // graphicsPanel1
-            // 
-            this.graphicsPanel1.BackColor = System.Drawing.SystemColors.Window;
-            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.graphicsPanel1.Location = new System.Drawing.Point(0, 51);
-            this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(573, 272);
-            this.graphicsPanel1.TabIndex = 3;
-            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.graphicsPanel1_Paint);
-            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -526,6 +517,27 @@ namespace GameOfLife
             this.changeEvolutionRulesToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.changeEvolutionRulesToolStripMenuItem.Text = "Change Evolution Rules";
             this.changeEvolutionRulesToolStripMenuItem.Click += new System.EventHandler(this.changeEvolutionRulesToolStripMenuItem_Click);
+            // 
+            // graphicsPanel1
+            // 
+            this.graphicsPanel1.BackColor = System.Drawing.SystemColors.Window;
+            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphicsPanel1.Location = new System.Drawing.Point(0, 51);
+            this.graphicsPanel1.Name = "graphicsPanel1";
+            this.graphicsPanel1.Size = new System.Drawing.Size(573, 272);
+            this.graphicsPanel1.TabIndex = 3;
+            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.graphicsPanel1_Paint);
+            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+            // 
+            // pauseWhenStableToolStripMenuItem
+            // 
+            this.pauseWhenStableToolStripMenuItem.Checked = true;
+            this.pauseWhenStableToolStripMenuItem.CheckOnClick = true;
+            this.pauseWhenStableToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.pauseWhenStableToolStripMenuItem.Name = "pauseWhenStableToolStripMenuItem";
+            this.pauseWhenStableToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.pauseWhenStableToolStripMenuItem.Text = "Pause When Stable";
+            this.pauseWhenStableToolStripMenuItem.Click += new System.EventHandler(this.pauseWhenStableToolStripMenuItem_Click);
             // 
             // frmConwaysGame
             // 
@@ -603,6 +615,7 @@ namespace GameOfLife
         private ToolStripMenuItem colorsToolStripMenuItem;
         private ToolStripMenuItem changeEvolutionRulesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem pauseWhenStableToolStripMenuItem;
     }
 }
 

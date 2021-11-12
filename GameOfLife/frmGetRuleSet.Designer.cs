@@ -405,6 +405,8 @@ namespace GameOfLife
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.okBtn);
+            this.MaximumSize = new System.Drawing.Size(279, 349);
+            this.MinimumSize = new System.Drawing.Size(279, 349);
             this.Name = "frmGetRuleSet";
             this.Text = "Change Rule Set";
             ((System.ComponentModel.ISupportInitialize)(this.off1nud)).EndInit();

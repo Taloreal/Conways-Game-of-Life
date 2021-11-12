@@ -44,6 +44,15 @@ namespace GameOfLife {
             } 
         }
 
+        public static bool PauseWhenStable {
+            get {
+                bool worked = Settings.GetValue("pauseOnStable", out bool pauseOnStable);
+                if (worked == false) { pauseOnStable = true; }
+                return pauseOnStable;
+            }
+            set => Settings.SetValue("pauseOnStable", value);
+        }
+
         /// <summary>
         /// Get or Set the generation number to stop at.
         /// </summary>

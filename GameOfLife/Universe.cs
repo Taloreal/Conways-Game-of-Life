@@ -118,15 +118,15 @@ namespace GameOfLife {
                     }
                 }
             }
-            universe = next;
             // Increment generation count
+            universe = next;
             Generation++;
-            int end = Config.RunTo;
-            if (same || Generation == end) {
-                if (Generation == end) {
-                    Config.RunTo = -1;
-                }
+            if (same && Config.PauseWhenStable) { 
+                Config.Running = false;  
+            }
+            if (Generation == Config.RunTo) { 
                 Config.Running = false; 
+                Config.RunTo = -1; 
             }
         }
 

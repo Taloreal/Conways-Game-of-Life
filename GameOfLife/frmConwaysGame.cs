@@ -163,6 +163,8 @@ namespace GameOfLife {
             Config.RandomSeed = worked ? seed : Config.RandomSeed;
             worked = Settings.GetValue("toroidal", out bool toro);
             Config.Universe.SetBoundaryType(worked ? toro : Config.Universe.GetBoundaryType(false));
+            worked = Settings.GetValue("pauseOnStable", out bool pausable);
+            Config.PauseWhenStable = worked ? pausable : true;
             worked = Settings.GetValue("gridClr", out int clr);
             Config.GridColor = worked ? (KnownColor)clr : Config.GridColor;
             worked = Settings.GetValue("gridx10Clr", out clr);
@@ -183,6 +185,7 @@ namespace GameOfLife {
             Config.Interval = 300;
             Config.RandomSeed = 0;
             Config.Universe.SetBoundaryType(false);
+            Config.PauseWhenStable = true;
             Config.GridColor = KnownColor.Black;
             Config.Gridx10Color = KnownColor.Black;
             Config.InactiveColor = KnownColor.White;
@@ -419,6 +422,10 @@ namespace GameOfLife {
             if (rules.ShowDialog() == DialogResult.OK) {
                 ForceRedraw(null, null);
             }
+        }
+
+        private void pauseWhenStableToolStripMenuItem_Click(object sender, EventArgs e) {
+            Config.PauseWhenStable = pauseWhenStableToolStripMenuItem.Checked;
         }
     }
 }
