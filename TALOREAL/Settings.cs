@@ -70,7 +70,7 @@ namespace TALOREAL {
                 { p = DateTime.TryParse(s, out DateTime val); return val; } },
         };
 
-        public static bool Autosave = false;
+        public static bool Autosave = true;
 
         /// <summary>
         /// Automatically loads the previously saved database.
@@ -82,7 +82,7 @@ namespace TALOREAL {
         /// </summary>
         /// <returns>A value determining success/failure.</returns>
         public static bool LoadSettings() {
-            Clear();
+            if (!Autosave) { Clear(); }
             try {
                 TextReader reader = new StreamReader(File.Open(@"Settings.TAL", FileMode.Open));
                 try {

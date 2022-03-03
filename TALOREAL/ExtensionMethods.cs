@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 
 namespace TALOREAL {
-    
+
+    public enum ForLoopDirection {
+        Forward,
+        Backward
+    }
+
     public static class ExtensionMethods {
 
         /// <summary>
@@ -59,12 +64,57 @@ namespace TALOREAL {
         /// <returns>Did the parsing work?</returns>
         public static bool TryParseBool(string str, out bool result) {
             result = false;
+            str = str.ToLower();
             if (string.IsNullOrEmpty(str)) { return false; }
             if (str[0] == '0' || str.ToLower().StartsWith("false")) { return true; }
             if (str[0] == '1' || str.ToLower().StartsWith("true")) { 
                 result = true; return true; 
             }
+            if (str.StartsWith("no") || str == "n") { return true; }
+            if (str.StartsWith("yes") || str.StartsWith("yea") || str == "y") {
+                result = true; return true;
+            }
             return false;
         }
+
+        /// <summary>
+        /// Determins if the list has an object satisfying the given predicate.
+        /// If there is, fetches the first matching to the obj parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of list.</typeparam>
+        /// <param name="list">The list to search.</param>
+        /// <param name="predicate">The conditional predicate.</param>
+        /// <param name="obj">The object fetched.</param>
+        /// <returns>Returns true if the element was in the list.</returns>
+        public static bool TryFetch<T>(this List<T> list, Func<T, bool> predicate, out T obj,
+            bool remove = true) {
+
+            for (int i = 0; i < list.Count; i++) {
+                if (predicate(list[i])) {
+                    obj = list[i];
+                    if (remove) { list.Remove(obj); }
+                    return true;
+                }
+            }
+            obj = default;
+            return false;
+        }
+
+
+        public static void ForEach<T>(this T[] arr, Action<T, int> toDo) {
+            for (int i = 0; i < arr.Length; i++) {
+                toDo(arr[i], i);
+            }
+        }
+
+        public static void For<T>(this T[] arr, Action<int> toDo, ForLoopDirection direction = ForLoopDirection.Forward) {
+            int start = direction == ForLoopDirection.Forward ? 0 : arr.Length - 1;
+            int end = direction == ForLoopDirection.Forward ? arr.Length : -1;
+            int iterator = direction == ForLoopDirection.Forward ? 1 : -1;
+            for (int i = start; direction == ForLoopDirection.Forward ? i < end : i > end; i += iterator) {
+                toDo(i);
+            }
+        }
+
     }
 }

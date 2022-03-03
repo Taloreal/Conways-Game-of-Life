@@ -236,22 +236,17 @@ namespace GameOfLife {
             if (DialogResult.OK == dlg.ShowDialog()) {
                 StreamReader reader = new StreamReader(dlg.FileName);
                 int maxWidth = 0;
-                int maxHeight = 0;
-                //read each line and store in a list.
                 List<string> rows = new List<string>();
                 while (!reader.EndOfStream) {
                     string row = reader.ReadLine();
                     if (row.Length == 0 || row[0] == '!') { continue; }
                     rows.Add(row);
                     maxWidth = row.Length > maxWidth ? row.Length : maxWidth;
-                    maxHeight += 1;
                 }
-                reader.Close(); //read file only once and close ASAP
-                //recreate the file's universe.
-                Config.UniverseSize = new Size(maxWidth, maxHeight);
+                reader.Close();
+                Config.UniverseSize = new Size(maxWidth, rows.Count);
                 for (int y = 0; y < rows.Count; y++) {
                     for (int x = 0; x < rows[y].Length; x++) {
-                        //cell is only alive if '0'
                         Config.Universe.SetCell(x, y, rows[y][x] == 'O');
                     }
                 }
